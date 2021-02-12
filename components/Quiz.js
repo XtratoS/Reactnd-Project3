@@ -3,10 +3,20 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { StackActions } from '@react-navigation/native';
 
+const ProgressBar = (props) => (
+    <View style={{flexDirection: 'row', marginTop: 30, backgroundColor: '#c2c2c2', borderRadius: 8, height: 40, width: '80%', justifyContent: 'flex-start'}}>
+        <View style={{backgroundColor: 'darkgreen', borderRadius: 8, height: 40, width: `${props.percentage}%`, justifyContent: 'center', alignItems: 'center'}}>
+            {props.percentage >= 25 && <Text style={{color: 'white', fontSize: 24}}>{props.percentage} %</Text>}
+        </View>
+        {props.percentage < 25 && <Text style={{marginLeft: 10, color: 'black', fontSize: 24}}>{props.percentage} %</Text>}
+    </View>
+)
+
 export default function Quiz(props) {
 
-    const [correct, setCorrect] = useState(0)
-    const [current, setCurrent] = useState(0)
+    const [correct, setCorrect] = useState(0);
+    const [current, setCurrent] = useState(0);
+    const [side, setSide] = useState('front');
 
     function nextQuestion() {
         setCurrent(current + 1);
@@ -21,11 +31,7 @@ export default function Quiz(props) {
     }
 
     function flipCard() {
-        const currentQuestion = props.route.params.deck.questions[current];
-        props.navigation.navigate(
-            'Answer',
-            { question: currentQuestion}
-        )
+        setSide(side === 'front' ? 'back' : 'front')
     }
     
     const { deck } = props.route.params;
@@ -38,39 +44,46 @@ export default function Quiz(props) {
                     You have completed this quiz!
                 </Text>
                 <Text style={{textAlign: 'center', marginTop: 50, fontSize: 24}}>
-                    Correct: {correct}/{props.route.params.deck.questions.length}{percentageRight < 25 && ` (${percentageRight}%)`}
+                    Correct: {correct}/{props.route.params.deck.questions.length}
                 </Text>
-                <View style={{marginTop: 30, backgroundColor: '#c2c2c2', borderRadius: 8, height: 40, width: '80%', justifyContent: 'flex-start'}}>
-                    <View style={{backgroundColor: 'darkgreen', borderRadius: 8, height: 40, width: `${percentageRight}%`, justifyContent: 'center', alignItems: 'center'}}>
-                        {percentageRight >= 25 && <Text style={{color: 'white', fontSize: 24}}>{percentageRight} %</Text>}
-                    </View>
-                </View>
+                <ProgressBar percentage={percentageRight} />
                 <View style={{marginTop: 40, marginBottom: 30}}>
-                    <TouchableOpacity style={[styles.btn]} onPress={()=>{props.navigation.goBack()}}>
+                    <TouchableOpacity
+                        style={[styles.btn]}
+                        onPress={()=> props.navigation.goBack()}
+                    >
                         <Text style={styles.btnText}>Go Back</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.btn]} onPress={()=>{props.navigation.dispatch(StackActions.popToTop());}}>
+                    <TouchableOpacity
+                        style={[styles.btn]}
+                        onPress={()=> props.navigation.dispatch(StackActions.popToTop())}
+                    >
                         <Text style={styles.btnText}>Go Home</Text>
                     </TouchableOpacity>
                 </View>
             </View>
         )
     }
+
     return (
         <View style={styles.container}>
-            <Text style={{fontSize: 36}}>{deck.questions[current].question}</Text>
-            <View>
-                <TouchableOpacity style={[styles.btn, {backgroundColor: 'darkgreen'}]} onPress={()=>{correctAnswer();nextQuestion()}}>
-                    <Text style={[styles.btnText, {color: 'white'}]}>Correct</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.btn, {backgroundColor: 'darkred'}]} onPress={()=>{nextQuestion()}}>
-                    <Text style={[styles.btnText, {color: 'white'}]}>Incorrect</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.btn, {flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#222'}]} onPress={flipCard}>
-                    <Text style={[styles.btnText, {color: 'white'}]}>Flip Card</Text><FontAwesome name="rotate-left" size={24} color="white" />
-                </TouchableOpacity>
+            <Text style={{marginTop: 30, fontSize: 36}}>{deck.questions[current].question}</Text>
+            <View style={{height: 180}}>
+                {side === 'back' ?
+                    <Text style={{marginTop: 30, textAlign: 'center', fontSize: 30}}>{deck.questions[current].answer}</Text>
+                :<>
+                    <TouchableOpacity style={[styles.btn, {marginTop: 50, backgroundColor: 'darkgreen'}]} onPress={()=>{correctAnswer();nextQuestion()}}>
+                        <Text style={[styles.btnText, {color: 'white'}]}>Correct</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.btn, {backgroundColor: 'darkred'}]} onPress={()=>{nextQuestion()}}>
+                        <Text style={[styles.btnText, {color: 'white'}]}>Incorrect</Text>
+                    </TouchableOpacity>
+                </>}
             </View>
-            <View>
+            <TouchableOpacity style={[styles.btn, {marginTop: 80, flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#222'}]} onPress={flipCard}>
+                <Text style={[styles.btnText, {color: 'white'}]}>Flip Card</Text><FontAwesome name="rotate-left" size={24} color="white" />
+            </TouchableOpacity>
+            <View style={{marginTop: 50}}>
                 <Text style={{fontSize: 18, fontStyle: 'italic'}}>{left()} questions left</Text>
             </View>
         </View>
@@ -81,7 +94,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'space-around',
+        // justifyContent: 'space-around',
     },
     btn: {
         padding: 10,

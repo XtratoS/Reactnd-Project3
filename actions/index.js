@@ -32,8 +32,8 @@ function addCard({ deckId, card }) {
 export function handleAddCard({ deckId, card }) {
     return function(dispatch) {
         dispatch(setLoading(true));
-        _addCard(deckId, card).then((addedCard) => {
-            dispatch(addCard({ deckId, addedCard }));
+        _addCard(deckId, card).then(() => {
+            dispatch(addCard({ deckId, card }));
             dispatch(setLoading(false));
         });
     }

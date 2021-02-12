@@ -10,8 +10,10 @@ function decks(state = {}, action) {
                 ...state,
                 [action.deckId]: {
                     ...state[action.deckId],
+                    questions: state[action.deckId].questions.concat([action.card])
                 }
             }
+            console.log(newState);
             return newState;
         default:
             return state;
