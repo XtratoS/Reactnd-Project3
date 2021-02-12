@@ -8,7 +8,7 @@ function DeckScreen(props) {
         if (props.deck && props.deck.title) {
             props.navigation.setOptions({title: props.deck.title})
         }
-    }, [props.navigation, props.deck])
+    }, [props.deck])
 
     if (props.loading === true || !props.deck) {
         return <ActivityIndicator style={{paddingVertical: 25}} size="large" color="red"/>

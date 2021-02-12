@@ -19,7 +19,7 @@ function AddCardScreen(props) {
 
     React.useEffect(() => {
         props.navigation.setOptions({title: `${props.route.params.deckMetaInfo.title} - Add Card`})
-    }, [props.navigation, props.route.params.deckMetaInfo]);
+    }, [props.route.params.deckMetaInfo]);
     
     const handleChange = (data) => {
         const { name, value } = data;
