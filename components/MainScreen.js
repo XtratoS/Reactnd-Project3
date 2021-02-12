@@ -53,6 +53,11 @@ function MainScreen(props) {
                 keyExtractor={(item) => {
                     return item.id;
                 }}
+                ListEmptyComponent={() => {
+                    return <View style={[styles.deckContainer, {borderWidth: 0, justifyContent: 'center'}]}>
+                        <Text style={{fontSize: 24}}>No Decks Here Yet</Text>
+                    </View>
+                }}
             />
         </View>
     )
