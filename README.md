@@ -43,3 +43,5 @@ Third Project of Udacity's React Nanodegree Program
    - [ ] An option to enter in the question
    - [ ] An option to enter in the answer
    - [ ] An option to submit the new question
+# Modifications
+- Added and `id` key to every deck
