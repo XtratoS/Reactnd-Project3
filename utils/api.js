@@ -1,65 +1,39 @@
-const data = {
-    React: {
-        title: 'React',
-        questions: [
-            {
-                question: 'What is React?',
-                answer: 'A library for managing user interfaces'
-            },
-            {
-                question: 'What is Redux?',
-                answer: 'A library for storing the states'
-            },
-            {
-                question: 'What is HTML?',
-                answer: 'Hyper Text Markup Language'
-            },
-            {
-                question: 'What is JSX?',
-                answer: 'A JS extension for writing HTML like syntax in JS'
-            },
-        ]
-    },
-    JavaScript: {
-        title: 'JavaScript',
-        questions: [
-            {
-                question: 'What is a closure?',
-                answer: 'The combination of a function and the lexical environment within which that function was declared.'
-            }
-        ]
-    }
-}
-
-function wait(n) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, n);
-    });
-}
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { wait } from './helpers';
+const ASYNCSTORAGE_KEY = 'Reactnd-Project3-22';
 
 export function getDecks() {
     return new Promise(async function executor(resolve, reject) {
+        let data = {};
         await wait(1000);
-        for (let item in data) {
-            data[item].id = item
+        const asyncStorageValue = await AsyncStorage.getItem(ASYNCSTORAGE_KEY);
+        if (asyncStorageValue !== null) {
+            data = JSON.parse(asyncStorageValue);
+            for (let item in data) {
+                data[item].id = item
+            }
+        } else {
+            await AsyncStorage.setItem(ASYNCSTORAGE_KEY, JSON.stringify(data));
         }
         resolve(data);
     });
 }
 
-export function getDeck(id) {
-    return new Promise(async function executor(resolve, reject) {
-        await wait(1000);
-        resolve(
-            data[id] ? data[id] : {}
-        );
-    })
-}
+// export function getDeck(id) {
+//     return new Promise(async function executor(resolve, reject) {
+//         await wait(1000);
+//         resolve(
+//             data[id] ? data[id] : {}
+//         );
+//     })
+// }
 
 export function addCard(deckId, card) {
     return new Promise(async function executor(resolve, reject) {
         await wait(500);
+        let data = JSON.parse(await AsyncStorage.getItem(ASYNCSTORAGE_KEY));
         data[deckId].questions.push(card);
+        await AsyncStorage.setItem(ASYNCSTORAGE_KEY, JSON.stringify(data));
         resolve(card);
     });
 }
