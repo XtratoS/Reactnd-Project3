@@ -7,7 +7,7 @@ import { handleReceiveDecks } from '../actions'
 function MainScreen(props) {
     useEffect(() => {
         props.handleReceiveDecks();
-    }, [])
+    }, [props])
 
     function navigateToItem(item) {
         props.navigation.navigate(
