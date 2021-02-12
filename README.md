@@ -25,12 +25,12 @@ Third Project of Udacity's React Nanodegree Program
    - [x] An option to add a new question to the deck
 
 3. [ ] Quiz View
-   - [ ] displays a card question
+   - [x] displays a card question
    - [ ] an option to view the answer (flips the card)
-   - [ ] a "Correct" button
-   - [ ] an "Incorrect" button
-   - [ ] the number of cards left in the quiz
-   - [ ] Displays the percentage correct once the quiz is complete
+   - [x] a "Correct" button
+   - [x] an "Incorrect" button
+   - [x] the number of cards left in the quiz
+   - [x] Displays the percentage correct once the quiz is complete
 
 4. [ ] New Deck View
    - [ ] An option to enter in the title for the new deck
@@ -42,3 +42,4 @@ Third Project of Udacity's React Nanodegree Program
    - [x] An option to submit the new question
 # Modifications
 - Added and `id` key to every deck
+- At the end of a quiz; If the percentage of the correct answers is less than 25%, it's displayed beside the number of correct answers and if it's 25% or more, it's displayed inside the progress bar

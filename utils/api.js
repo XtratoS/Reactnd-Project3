@@ -7,9 +7,17 @@ const data = {
                 answer: 'A library for managing user interfaces'
             },
             {
-                question: 'What is React?',
-                answer: 'A library for managing user interfaces'
-            }
+                question: 'What is Redux?',
+                answer: 'A library for storing the states'
+            },
+            {
+                question: 'What is HTML?',
+                answer: 'Hyper Text Markup Language'
+            },
+            {
+                question: 'What is JSX?',
+                answer: 'A JS extension for writing HTML like syntax in JS'
+            },
         ]
     },
     JavaScript: {

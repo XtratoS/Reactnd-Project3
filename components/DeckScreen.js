@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 
 function DeckScreen(props) {
@@ -23,6 +22,13 @@ function DeckScreen(props) {
         )
     }
 
+    function startQuiz() {
+        props.navigation.navigate(
+            'Quiz',
+            { deck: props.deck }
+        )
+    }
+
     return (
         <View style={styles.container}>
             <View style={{alignItems: 'center'}}>
@@ -38,6 +44,7 @@ function DeckScreen(props) {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.btn}
+                    onPress={() => {startQuiz()}}
                 >
                     <Text style={{fontSize: 24}}>Start Quiz</Text>
                 </TouchableOpacity>
