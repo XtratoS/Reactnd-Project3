@@ -1,10 +1,15 @@
-import { RECEIVE_DECKS, ADD_CARD, SET_LOADING } from '../actions';
+import { RECEIVE_DECKS, ADD_CARD, SET_LOADING, CREATE_DECK } from '../actions';
 import { combineReducers } from 'redux'
 
 function decks(state = {}, action) {
     switch(action.type) {
         case RECEIVE_DECKS:
             return {...action.decks};
+        case CREATE_DECK:
+            return {
+                ...state,
+                [action.deck.title]: action.deck
+            }
         case ADD_CARD:
             let newState = {
                 ...state,
@@ -13,7 +18,6 @@ function decks(state = {}, action) {
                     questions: state[action.deckId].questions.concat([action.card])
                 }
             }
-            console.log(newState);
             return newState;
         default:
             return state;

@@ -18,8 +18,8 @@ function AddCardScreen(props) {
     const [values, setValues] = React.useState({question: '', answer: ''});
 
     React.useEffect(() => {
-        props.navigation.setOptions({title: `${props.route.params.deckMetaInfo.title} - Add Card`})
-    }, [props.route.params.deckMetaInfo]);
+        props.navigation.setOptions({title: `${props.route.params.title} - Add Card`})
+    }, [props.route.params.title]);
     
     const handleChange = (data) => {
         const { name, value } = data;
@@ -31,7 +31,7 @@ function AddCardScreen(props) {
 
     const submitQuestion = async () => {
         // DISPATCH ACTION
-        const deckId = props.route.params.deckMetaInfo.id;
+        const deckId = props.route.params.title;
         props.dispatch(handleAddCard({ deckId, card: {...values} }));
 
         // CLEAR FIELDS
@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
         height: 60,
         width: 220,
         borderWidth: 1,
-        borderColor: 'red',
         borderRadius: 4
     },
     submitBtn: {

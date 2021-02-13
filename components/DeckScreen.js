@@ -17,7 +17,7 @@ function DeckScreen(props) {
         props.navigation.navigate(
             'AddCard',
             {
-                deckMetaInfo: props.route.params.deckMetaInfo
+                title: props.route.params.title
             }
         )
     }
@@ -54,9 +54,8 @@ function DeckScreen(props) {
 }
 
 function mapStateToProps(state, props) {
-    let deckId = props.route.params.deckMetaInfo.id;
     return {
-        deck: state.decks[deckId],
+        deck: state.decks[props.route.params.title],
         loading: state.loadingIndicator,
     }
 }

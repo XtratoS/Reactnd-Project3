@@ -15,6 +15,7 @@ import MainScreen from './MainScreen';
 import DeckScreen from './DeckScreen';
 import AddCardScreen from './AddCardScreen';
 import QuizScreen from './Quiz';
+import CreateDeckScreen from './CreateDeckScreen'
 
 const store = createStore(reducer, middleware);
 
@@ -29,7 +30,7 @@ export default function App(props) {
                         <Stack.Screen
                             name="Home"
                             component={MainScreen}
-                            options={{title: "Home"}}
+                            options={{title: ""}}
                         />
                         <Stack.Screen
                             name="Deck"
@@ -45,6 +46,11 @@ export default function App(props) {
                             name="Quiz"
                             component={QuizScreen}
                             options={{title: "Quiz"}}
+                        />
+                        <Stack.Screen
+                            name="CreateDeck"
+                            component={CreateDeckScreen}
+                            options={{title: "Create New Deck"}}
                         />
                     </Stack.Navigator>
             </NavigationContainer>

@@ -1,8 +1,9 @@
-import { getDecks, addCard as _addCard } from '../utils/api'
+import { getDecks, addCard as _addCard, createDeck as _createDeck } from '../utils/api'
 
 export const RECEIVE_DECKS = 'RECEIVE_DECKS';
 export const ADD_CARD = 'ADD_CARD';
 export const SET_LOADING = 'SET_LOADING';
+export const CREATE_DECK = 'CREATE_DECK';
 
 function receiveDecks(decks) {
     return {
@@ -29,11 +30,30 @@ function addCard({ deckId, card }) {
     }
 }
 
-export function handleAddCard({ deckId, card }) {
+export function handleAddCard(cardData) {
     return function(dispatch) {
         dispatch(setLoading(true));
-        _addCard(deckId, card).then(() => {
-            dispatch(addCard({ deckId, card }));
+        _addCard(cardData).then(() => {
+            dispatch(addCard(cardData));
+            dispatch(setLoading(false));
+        });
+    }
+}
+
+function createDeck(title) {
+    return {
+        type: CREATE_DECK,
+        deck: {title, questions: []}
+    }
+}
+
+export function handleCreateDeck(title) {
+    return function(dispatch) {
+        dispatch(setLoading(true));
+        _createDeck(title).then((newDeckCreated) => {
+            if (newDeckCreated === true) {
+                dispatch(createDeck(title));
+            }
             dispatch(setLoading(false));
         });
     }

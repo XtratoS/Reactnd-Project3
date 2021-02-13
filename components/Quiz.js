@@ -33,21 +33,33 @@ export default function Quiz(props) {
     function flipCard() {
         setSide(side === 'front' ? 'back' : 'front')
     }
+
+    function restart() {
+        setCurrent(0);
+        setCorrect(0);
+        setSide('front');
+    }
     
     const { deck } = props.route.params;
 
     if (current === props.route.params.deck.questions.length) {
-        const percentageRight = (correct / current).toFixed(2)*100;
+        const percentageRight = (correct / current * 10000).toFixed()/100;
         return (
             <View style={styles.container}>
-                <Text style={{marginTop: 40, fontSize: 28, textAlign: 'center'}}>
+                <Text style={{marginTop: 40, marginHorizontal: 20, fontSize: 26, textAlign: 'center'}}>
                     You have completed this quiz!
                 </Text>
-                <Text style={{textAlign: 'center', marginTop: 50, fontSize: 24}}>
+                <Text style={{textAlign: 'center', marginTop: 35, fontSize: 20}}>
                     Correct: {correct}/{props.route.params.deck.questions.length}
                 </Text>
                 <ProgressBar percentage={percentageRight} />
-                <View style={{marginTop: 40, marginBottom: 30}}>
+                <View style={{marginTop: 20, marginBottom: 30}}>
+                    <TouchableOpacity
+                        style={[styles.btn]}
+                        onPress={restart}
+                    >
+                        <Text style={styles.btnText}>Restart Quiz</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.btn]}
                         onPress={()=> props.navigation.goBack()}

@@ -2,18 +2,25 @@ import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, VirtualizedList, ActivityIndicator, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { handleReceiveDecks } from '../actions'
+import { Entypo,  } from '@expo/vector-icons'
 
+//entypo boook, circlewithplus
 function MainScreen(props) {
     useEffect(() => {
         props.handleReceiveDecks();
+        props.navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity style={{flexDirection: 'row', marginHorizontal: 10}} onPress={()=>{props.navigation.navigate("CreateDeck")}}>
+                    <Entypo name='circle-with-plus' size={26} /><Text> </Text><Entypo name='book' size={26} />
+                </TouchableOpacity>
+            )
+        })
     }, [])
 
     function navigateToItem(item) {
         props.navigation.navigate(
             'Deck',
-            {
-                deckMetaInfo: item
-            }
+            { title: item.title }
         )
     }
 
@@ -25,10 +32,12 @@ function MainScreen(props) {
         <View style={styles.container}>
             <VirtualizedList
                 style={{ paddingVertical: 15 }}
+                contentContainerStyle={{ paddingBottom: 30 }}
                 data={props.decks}
                 renderItem={
                     ({item}) => (
                         <TouchableOpacity
+                            key={item.title}
                             style={styles.deckContainer}
                             onPress={() => {navigateToItem(item)}}
                         >
@@ -51,7 +60,7 @@ function MainScreen(props) {
                 listKey={"MainList"}
                 initialNumToRender={5}
                 keyExtractor={(item) => {
-                    return item.id;
+                    return item.title;
                 }}
                 ListEmptyComponent={() => {
                     return <View style={[styles.deckContainer, {borderWidth: 0, justifyContent: 'center'}]}>
@@ -84,7 +93,7 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: '#fff',
         // alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     deckContainer: {
         alignItems: 'center',

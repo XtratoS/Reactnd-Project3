@@ -1,6 +1,5 @@
 export const defaultDecks = {
     Web: {
-        id : 'Web',
         title: 'Web',
         questions: [
             {
@@ -22,7 +21,6 @@ export const defaultDecks = {
         ]
     },
     React: {
-        id: 'React',
         title: 'React',
         questions: [
             {
