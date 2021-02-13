@@ -1,4 +1,4 @@
-import { RECEIVE_DECKS, ADD_CARD, SET_LOADING, CREATE_DECK } from '../actions';
+import { RECEIVE_DECKS, ADD_CARD, SET_LOADING, CREATE_DECK, REMOVE_DECK } from '../actions';
 import { combineReducers } from 'redux'
 
 function decks(state = {}, action) {
@@ -10,6 +10,9 @@ function decks(state = {}, action) {
                 ...state,
                 [action.deck.title]: action.deck
             }
+        case REMOVE_DECK:
+            delete state[action.title];
+            return state;
         case ADD_CARD:
             let newState = {
                 ...state,

@@ -6,7 +6,6 @@ import { defaultDecks } from './default';
 export function getDecks() {
     return new Promise(async function executor(resolve, reject) {
         let data = {};
-        await wait(500);
         const asyncStorageValue = await AsyncStorage.getItem(ASYNCSTORAGE_KEY);
         if (asyncStorageValue !== null) {
             data = JSON.parse(asyncStorageValue);
@@ -29,7 +28,6 @@ export function getDecks() {
 
 export function addCard({ deckId, card }) {
     return new Promise(async function executor(resolve, reject) {
-        await wait(500);
         let data = JSON.parse(await AsyncStorage.getItem(ASYNCSTORAGE_KEY));
         // console.log(data);
         data[deckId].questions.push(card);
@@ -47,7 +45,6 @@ export function addCard({ deckId, card }) {
  */
 export function createDeck(title) {
     return new Promise(async function executor(resolve, reject) {
-        await wait(500);
         let data = JSON.parse(await AsyncStorage.getItem(ASYNCSTORAGE_KEY));
         if (!data[title]) {
             data[title] = {title, questions: []};
@@ -56,4 +53,14 @@ export function createDeck(title) {
         }
         resolve(false);
     })
+}
+
+export function removeDeck(title) {
+    return new Promise(async function executor(resolve, reject){
+        let data = JSON.parse(await AsyncStorage.getItem(ASYNCSTORAGE_KEY));
+        console.log(title)
+        delete data[title];
+        await AsyncStorage.setItem(ASYNCSTORAGE_KEY, JSON.stringify(data));
+        resolve(true);
+    });
 }

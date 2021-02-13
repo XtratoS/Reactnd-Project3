@@ -49,12 +49,8 @@ function CreateDeckScreen(props) {
     )
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        createDeck: (title) => {
-            return dispatch(handleCreateDeck(title));
-        }
-    }
+let mapDispatchToProps = {
+    createDeck: handleCreateDeck
 }
 
 export default connect(null, mapDispatchToProps)(CreateDeckScreen);

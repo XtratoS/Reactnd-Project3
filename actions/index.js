@@ -1,9 +1,15 @@
-import { getDecks, addCard as _addCard, createDeck as _createDeck } from '../utils/api'
+import {
+    getDecks,
+    addCard as _addCard,
+    createDeck as _createDeck,
+    removeDeck as _removeDeck,
+} from '../utils/api'
 
 export const RECEIVE_DECKS = 'RECEIVE_DECKS';
 export const ADD_CARD = 'ADD_CARD';
 export const SET_LOADING = 'SET_LOADING';
 export const CREATE_DECK = 'CREATE_DECK';
+export const REMOVE_DECK = 'REMOVE_DECK';
 
 function receiveDecks(decks) {
     return {
@@ -54,6 +60,23 @@ export function handleCreateDeck(title) {
             if (newDeckCreated === true) {
                 dispatch(createDeck(title));
             }
+            dispatch(setLoading(false));
+        });
+    }
+}
+
+function removeDeck(title) {
+    return {
+        type: REMOVE_DECK,
+        title
+    }
+}
+
+export function handleRemoveDeck(title) {
+    return function(dispatch) {
+        dispatch(setLoading(true));
+        _removeDeck(title).then(()=> {
+            dispatch(removeDeck(title));
             dispatch(setLoading(false));
         });
     }
