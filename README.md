@@ -7,7 +7,7 @@ Third Project of Udacity's React Nanodegree Program
 - Scan the qr code or use an ios or an android emulator
 # Requirements
 1. [x] Use create-react-native-app to build your project.
-2. [ ] Allow users to create a deck which can hold an unlimited number of cards.
+2. [x] Allow users to create a deck which can hold an unlimited number of cards.
 3. [x] Allow users to add a card to a specific deck.
 4. [x] The front of the card should display the question.
 5. [x] The back of the card should display the answer.
@@ -32,9 +32,9 @@ Third Project of Udacity's React Nanodegree Program
    - [x] the number of cards left in the quiz
    - [x] Displays the percentage correct once the quiz is complete
 
-4. [ ] New Deck View
-   - [ ] An option to enter in the title for the new deck
-   - [ ] An option to submit the new deck title
+4. [x] New Deck View
+   - [x] An option to enter in the title for the new deck
+   - [x] An option to submit the new deck title
 
 5. [x] New Question View
    - [x] An option to enter in the question
