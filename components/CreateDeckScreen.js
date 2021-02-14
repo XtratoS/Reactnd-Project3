@@ -9,7 +9,12 @@ function ClearBtn(props) {
         <TouchableOpacity
             onPress={props.onPress}
         >
-            <Ionicons style={{marginHorizontal: 8}} size={28} color='red' name={Platform.OS === 'ios' ? 'ios-trash-outline' : 'trash-outline'}/>
+            <Ionicons
+                name={Platform.OS === 'ios' ? 'ios-trash-outline' : 'trash-outline'}
+                style={{marginHorizontal: 8}}
+                size={28}
+                color='red'
+            />
         </TouchableOpacity>
     )
 }

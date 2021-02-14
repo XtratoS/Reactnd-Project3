@@ -1,11 +1,11 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { createStore } from 'redux';
-import { connect, Provider } from 'react-redux';
+import { Provider } from 'react-redux';
 
 import reducer from '../reducers';
 import middleware from '../middleware';

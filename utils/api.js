@@ -4,8 +4,8 @@ import * as Notifications from 'expo-notifications';
 import { createNotification } from './helpers';
 import { defaultDecks } from './default';
 
-const DATA_KEY = 'Reactnd-Project3-DataKey25';
-const NOTIFICATION_KEY = 'Reactnd-Project3-NotificationKey37';
+const DATA_KEY = 'Udacity:Reactnd-Project3-Data';
+const NOTIFICATION_KEY = 'Udacity:Reactnd-Project3-Notification';
 
 export function getDecks() {
     return new Promise(async function executor(resolve) {
@@ -57,6 +57,13 @@ export function removeDeck(title) {
 }
 
 export async function setLocalNotification(time) {
+    // REMOVE PREVIOUS NOTIFICATION FROM PHONE SCHEDULE
+    let prevNotif = await AsyncStorage.getItem(NOTIFICATION_KEY);
+    if (prevNotif) {
+        await Notifications.cancelScheduledNotificationAsync(prevNotif)
+    }
+
+    // REMOVE PREVIOUS NOTIFICATION FROM ASYNC STORAGE (IF NO NEW ONE)
     if (time === null) {
         return AsyncStorage.removeItem(NOTIFICATION_KEY);
     }
@@ -69,13 +76,9 @@ export async function setLocalNotification(time) {
         }),
     });
 
-    let prevNotif = await AsyncStorage.getItem(NOTIFICATION_KEY);
-    if (prevNotif) {
-        await Notifications.cancelScheduledNotificationAsync(prevNotif);
-    }
-
     const date = new Date(time);
 
+    // ADD NEW NOTIFICATION TO PHONE SCHEDULE
     const notificationId = await Notifications.scheduleNotificationAsync({
         content: createNotification(),
         trigger: {
@@ -85,6 +88,7 @@ export async function setLocalNotification(time) {
         }
     });
 
+    // ADD NEW NOTIFICATION TO ASYNC STORAGE
     return AsyncStorage.setItem(NOTIFICATION_KEY, notificationId);
 }
 

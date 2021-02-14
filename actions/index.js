@@ -44,8 +44,6 @@ export function handleInitialData() {
         nextTimeStamp = nextTimeStamp === null ? nextTimeStamp : (await nextTimeStamp);
 
         dispatch(receiveInitialData(decks, nextTimeStamp));
-        // dispatch(receiveDecks(decks));
-        // dispatch(setTime(nextTimeStamp));
         dispatch(setLoading(false));
     }
 }

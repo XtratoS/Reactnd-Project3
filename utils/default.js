@@ -7,15 +7,15 @@ export const defaultDecks = {
                 answer: "HyperText Markup Language"
             },
             {
-                question: "CSS?",
+                question: "What's CSS?",
                 answer: "Cascase Styling Sheet"
             },
             {
-                question: "JS?",
+                question: "What's JS?",
                 answer: "JavaScript"
             },
             {
-                question: "JSX?",
+                question: "What's JSX?",
                 answer: "A JavaScript extension for writing HTML-like code within JS"
             }
         ]
@@ -29,7 +29,7 @@ export const defaultDecks = {
             },
             {
                 question: 'What is Redux?',
-                answer: "A library for managing the application's state"
+                answer: "A library for managing the state"
             }
         ]
     },

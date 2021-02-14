@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, VirtualizedList, ActivityIndicator, TouchableOpacity, Platform } from 'react-native'
 import { connect } from 'react-redux'
-import { handleInitialData, handleSetTime } from '../actions'
-import { Entypo, Ionicons, MaterialIcons, FontAwesome, } from '@expo/vector-icons'
+import { handleInitialData } from '../actions'
+import { Entypo, Ionicons, MaterialIcons, } from '@expo/vector-icons'
 
 // import { setLocalNotification } from '../utils/api'
 
@@ -17,12 +17,9 @@ function MainScreen(props) {
                 >
                     {Platform.OS === 'ios' ? <>
                     <Ionicons name='ios-notifications' color='black' size={26} />
-                    {/* <Text style={{fontSize: 22}}></Text> */}
                     </>:<>
                     <MaterialIcons name='notifications-on' color='black' size={26} />
-                    {/* <Text style={{fontSize: 22}}></Text> */}
                     </>}
-                    {/* <FontAwesome name="gear" size={26} color="black" /> */}
                 </TouchableOpacity>
             ),
             headerRight: () => (
@@ -111,7 +108,6 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
         backgroundColor: '#fff',
-        // alignItems: 'center',
         justifyContent: 'center'
     },
     iconsContainer: {
@@ -119,7 +115,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 4,
         padding: 12,
         alignItems: 'center',
-        // borderWidth: 1,
         borderRadius: 8,
         backgroundColor: '#eee',
     },

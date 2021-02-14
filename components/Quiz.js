@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { StackActions } from '@react-navigation/native';
@@ -22,8 +22,9 @@ export default function Quiz(props) {
         setCurrent(current + 1);
     }
 
-    function correctAnswer() {
+    function correctAnswerBtn() {
         setCorrect(correct + 1);
+        nextQuestion();
     }
 
     function left() {
@@ -39,36 +40,44 @@ export default function Quiz(props) {
         setCorrect(0);
         setSide('front');
     }
+
+    function goBack() {
+        props.navigation.goBack();
+    }
+
+    function goHome() {
+        props.navigation.dispatch(StackActions.popToTop());
+    }
     
     const { deck } = props.route.params;
 
-    if (current === props.route.params.deck.questions.length) {
+    if (current === deck.questions.length) {
         const percentageRight = (correct / current * 10000).toFixed()/100;
         return (
             <View style={styles.container}>
-                <Text style={{marginTop: 40, marginHorizontal: 20, fontSize: 26, textAlign: 'center'}}>
+                <Text style={styles.topText}>
                     You have completed this quiz!
                 </Text>
                 <Text style={{textAlign: 'center', marginTop: 35, fontSize: 20}}>
-                    Correct: {correct}/{props.route.params.deck.questions.length}
+                    Correct: {correct}/{deck.questions.length}
                 </Text>
                 <ProgressBar percentage={percentageRight} />
                 <View style={{marginTop: 20, marginBottom: 30}}>
                     <TouchableOpacity
-                        style={[styles.btn]}
+                        style={styles.btn}
                         onPress={restart}
                     >
                         <Text style={styles.btnText}>Restart Quiz</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={[styles.btn]}
-                        onPress={()=> props.navigation.goBack()}
+                        style={styles.btn}
+                        onPress={goBack}
                     >
                         <Text style={styles.btnText}>Go Back</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={[styles.btn]}
-                        onPress={()=> props.navigation.dispatch(StackActions.popToTop())}
+                        style={styles.btn}
+                        onPress={goHome}
                     >
                         <Text style={styles.btnText}>Go Home</Text>
                     </TouchableOpacity>
@@ -79,24 +88,39 @@ export default function Quiz(props) {
 
     return (
         <View style={styles.container}>
-            <Text style={{marginTop: 30, fontSize: 36}}>{deck.questions[current].question}</Text>
+            <Text style={{marginTop: 30, fontSize: 36}}>
+                {deck.questions[current].question}
+            </Text>
             <View style={{height: 180}}>
                 {side === 'back' ?
-                    <Text style={{marginTop: 30, textAlign: 'center', fontSize: 30}}>{deck.questions[current].answer}</Text>
+                    <Text style={{marginTop: 30, textAlign: 'center', fontSize: 30}}>
+                        {deck.questions[current].answer}
+                    </Text>
                 :<>
-                    <TouchableOpacity style={[styles.btn, {marginTop: 50, backgroundColor: 'darkgreen'}]} onPress={()=>{correctAnswer();nextQuestion()}}>
+                    <TouchableOpacity
+                        style={[styles.btn, {marginTop: 50, backgroundColor: 'darkgreen'}]}
+                        onPress={correctAnswerBtn}
+                    >
                         <Text style={[styles.btnText, {color: 'white'}]}>Correct</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.btn, {backgroundColor: 'darkred'}]} onPress={()=>{nextQuestion()}}>
+                    <TouchableOpacity
+                        style={[styles.btn, {backgroundColor: 'darkred'}]}
+                        onPress={nextQuestion}
+                    >
                         <Text style={[styles.btnText, {color: 'white'}]}>Incorrect</Text>
                     </TouchableOpacity>
                 </>}
             </View>
-            <TouchableOpacity style={[styles.btn, {marginTop: 80, flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#222'}]} onPress={flipCard}>
-                <Text style={[styles.btnText, {color: 'white'}]}>Flip Card</Text><FontAwesome name="rotate-left" size={24} color="white" />
+            <TouchableOpacity style={[styles.btn, styles.flipCardBtn]} onPress={flipCard}>
+                <Text style={[styles.btnText, {color: 'white'}]}>
+                    Flip Card
+                </Text>
+                <FontAwesome name="rotate-left" size={24} color="white" />
             </TouchableOpacity>
             <View style={{marginTop: 50}}>
-                <Text style={{fontSize: 18, fontStyle: 'italic'}}>{left()} questions left</Text>
+                <Text style={{fontSize: 18, fontStyle: 'italic'}}>
+                    {left()} questions left
+                </Text>
             </View>
         </View>
     )
@@ -106,7 +130,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        // justifyContent: 'space-around',
     },
     btn: {
         padding: 10,
@@ -118,5 +141,17 @@ const styles = StyleSheet.create({
     },
     btnText: {
         fontSize: 24,
-    }
+    },
+    flipCardBtn: {
+        marginTop: 80,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        backgroundColor: '#222'
+    },
+    topText: {
+        marginTop: 40,
+        marginHorizontal: 20,
+        fontSize: 26,
+        textAlign: 'center'
+    },
 })

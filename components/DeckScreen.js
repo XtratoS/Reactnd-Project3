@@ -15,6 +15,28 @@ function ModalBackdrop() {
     )
 }
 
+function ModalConfirmBtn(props) {
+    return (<TouchableOpacity
+        style={{ marginRight: 20, padding: 4 }}
+        onPress={props.onPress}
+    >
+        <Text style={{fontSize: 18, color: 'red'}}>
+            Delete Deck
+        </Text>
+    </TouchableOpacity>)
+}
+
+function ModalCancelBtn(props) {
+    return (<TouchableOpacity
+        style={{ marginLeft: 20, padding: 4 }}
+        onPress={props.onPress}
+    >
+        <Text style={{fontSize: 18}}>
+            Cancel
+        </Text>
+    </TouchableOpacity>)
+}
+
 function DeckScreen(props) {
     const [modalVisibility, setModalVisibility] = useState(false)
 
@@ -31,9 +53,7 @@ function DeckScreen(props) {
     function navigateToAddCard() {
         props.navigation.navigate(
             'AddCard',
-            {
-                title: props.route.params.title
-            }
+            { title: props.route.params.title }
         )
     }
 
@@ -54,6 +74,7 @@ function DeckScreen(props) {
         props.navigation.goBack();
     }
 
+    const numCards = props.deck.questions.length;
     return (
         <View style={styles.container}>
             <Modal
@@ -63,22 +84,24 @@ function DeckScreen(props) {
             >
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <ModalBackdrop />
-                    <View style={{margin: 35, borderRadius: 2, padding: 20, backgroundColor: 'white'}}>
-                        <Text style={{textAlign: 'center', fontSize: 18}}>Are you sure you want to delete this deck?</Text>
-                        <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginTop: 36}}>
-                            <TouchableOpacity style={{ marginRight: 20, padding: 4 }} onPress={deleteDeck}>
-                                <Text style={{fontSize: 18, color: 'red'}}>Delete Deck</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{ marginLeft: 20, padding: 4 }} onPress={toggleModal}>
-                                <Text style={{fontSize: 18}}>Cancel</Text>
-                            </TouchableOpacity>
+                    <View style={styles.modalContentContainer}>
+                        <Text style={{textAlign: 'center', fontSize: 18}}>
+                            Are you sure you want to delete this deck?
+                        </Text>
+                        <View style={styles.modalBtnsContainer}>
+                            <ModalConfirmBtn onPress={deleteDeck}/>
+                            <ModalCancelBtn onPress={toggleModal}/>
                         </View>
                     </View>
                 </View>
             </Modal>
             <View style={{alignItems: 'center'}}>
-                <Text style={{marginVertical:4, fontSize: 36}}>{props.deck.title}</Text>
-                <Text style={{marginVertical:4, fontSize: 16, color: '#444'}}>{props.deck.questions.length} Cards</Text>
+                <Text style={{marginVertical:4, fontSize: 36}}>
+                    {props.deck.title}
+                </Text>
+                <Text style={{marginVertical:4, fontSize: 16, color: '#444'}}>
+                    {numCards} Cards
+                </Text>
             </View>
             <View style={{alignItems: 'center'}}>
                 <TouchableOpacity
@@ -88,15 +111,22 @@ function DeckScreen(props) {
                     <Text style={{fontSize: 24}}>Add Card</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={styles.btn}
+                    style={[styles.btn, { opacity: numCards === 0 ? 0.3 : 1 }]}
                     onPress={() => {startQuiz()}}
+                    disabled={numCards === 0}
                 >
-                    <Text style={{fontSize: 24}}>Start Quiz</Text>
+                    <Text style={{fontSize: 24, color: 'black'}}>
+                        Start Quiz
+                    </Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={toggleModal} style={[styles.btn, {borderColor: 'red', backgroundColor: 'red'}]}>
-                    <Text style={{fontSize: 18, color: 'white'}}>Delete</Text>
+                <TouchableOpacity
+                    style={[styles.btn, {borderColor: 'red', backgroundColor: 'red'}]}
+                    onPress={toggleModal}
+                >
+                    <Text style={{fontSize: 18, color: 'white'}}>
+                        Delete
+                    </Text>
                 </TouchableOpacity>
-                
             </View>
         </View>
     )
@@ -131,5 +161,16 @@ const styles = StyleSheet.create({
         width: 180,
         alignItems: 'center',
         marginVertical: 10
+    },
+    modalContentContainer: {
+        margin: 35,
+        borderRadius: 2,
+        padding: 20,
+        backgroundColor: 'white'
+    },
+    modalBtnsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginTop: 36
     }
 })

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,Switch, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity,Switch } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { connect } from 'react-redux';
 import { handleSetTime } from '../actions';
-import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 
 function formatTime(input) {
-    console.log('input', input)
     let date;
     if (typeof(input) === 'number') {
         date = new Date(input)
@@ -62,7 +60,9 @@ function ConfigNotificationScreen(props) {
                 />
             </View>
             <View style={styles.settingGroup}>
-                <Text style={[styles.settingLabel, {color: switchState ? 'black' : 'grey'}]}>Reminder Time</Text>
+                <Text style={[styles.settingLabel, {color: switchState ? 'black' : 'grey'}]}>
+                    Reminder Time
+                </Text>
                 <TouchableOpacity
                     style={{
                         flexDirection: 'row',
@@ -79,7 +79,7 @@ function ConfigNotificationScreen(props) {
                     </Text>
                 </TouchableOpacity>
             </View>
-            <View style={[styles.settingGroup, {flex: 1, justifyContent: 'center', alignItems: 'flex-end'}]}>
+            <View style={[styles.settingGroup, styles.saveBtnContainer]}>
                 <TouchableOpacity
                     style={[styles.btn, { backgroundColor: 'darkgreen' }]}
                     onPress={() => {submitChanges()}}
@@ -142,4 +142,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginVertical: 10
     },
+    saveBtnContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'flex-end'
+    }
 })
