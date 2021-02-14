@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity,Switch } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { connect } from 'react-redux';
-import { handleSetTime } from '../actions';
+import { handleSetTime } from '../actions/dailyReminderTime';
 
 function formatTime(input) {
     let date;

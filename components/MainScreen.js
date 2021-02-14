@@ -1,8 +1,16 @@
-import React, { useEffect } from 'react'
-import { View, Text, StyleSheet, VirtualizedList, ActivityIndicator, TouchableOpacity, Platform } from 'react-native'
-import { connect } from 'react-redux'
-import { handleInitialData } from '../actions'
-import { Entypo, Ionicons, MaterialIcons, } from '@expo/vector-icons'
+import React, { useEffect } from 'react';
+import {
+    View,
+    Text,
+    StyleSheet,
+    VirtualizedList,
+    ActivityIndicator,
+    TouchableOpacity,
+    Platform
+} from 'react-native';
+import { connect } from 'react-redux';
+import { Entypo, Ionicons, MaterialIcons, } from '@expo/vector-icons';
+import { handleInitialData } from '../actions/shared';
 
 // import { setLocalNotification } from '../utils/api'
 

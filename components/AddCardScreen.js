@@ -1,8 +1,15 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, Platform } from 'react-native'
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    TextInput,
+    Platform
+} from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
-import { handleAddCard } from '../actions'
+import { handleAddCard } from '../actions/decks'
 
 function ClearBtn(props) {
     return (
@@ -76,7 +83,7 @@ function AddCardScreen(props) {
             </View>
             <View style={styles.inputGroup}>
                 <TouchableOpacity onPress={submitQuestion} style={styles.submitBtn}>
-                    <Text style={{fontSize: 16}}>Submit</Text>
+                    <Text style={{fontSize: 20}}>Submit</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -101,7 +108,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         paddingVertical: 4,
         textAlignVertical: 'top',
-        fontSize: 16,
+        fontSize: 20,
         height: 60,
         width: 220,
         borderWidth: 1,

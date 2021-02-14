@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Modal } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    ActivityIndicator,
+    TouchableOpacity,
+    Modal
+} from 'react-native';
 import { connect } from 'react-redux';
-import { handleRemoveDeck } from '../actions'
+import { handleRemoveDeck } from '../actions/decks';
 
 function ModalBackdrop() {
     return (

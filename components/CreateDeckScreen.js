@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, Platform } from 'react-native';
+import { 
+    View,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    TextInput,
+    Platform
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { connect } from 'react-redux';
-import { handleCreateDeck } from '../actions';
+import { handleCreateDeck } from '../actions/decks';
 
 function ClearBtn(props) {
     return (
