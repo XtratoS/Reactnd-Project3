@@ -16,6 +16,7 @@ import DeckScreen from './DeckScreen';
 import AddCardScreen from './AddCardScreen';
 import QuizScreen from './Quiz';
 import CreateDeckScreen from './CreateDeckScreen'
+import ConfigNotificationScreen from './ConfigNotificationScreen'
 
 const store = createStore(reducer, middleware);
 
@@ -51,6 +52,11 @@ export default function App(props) {
                             name="CreateDeck"
                             component={CreateDeckScreen}
                             options={{title: "Create New Deck"}}
+                        />
+                        <Stack.Screen
+                            name="ConfigureNotification"
+                            component={ConfigNotificationScreen}
+                            options={{title: "Reminder Settings"}}
                         />
                     </Stack.Navigator>
             </NavigationContainer>

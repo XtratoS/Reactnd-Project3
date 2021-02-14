@@ -12,7 +12,7 @@ Third Project of Udacity's React Nanodegree Program
 4. [x] The front of the card should display the question.
 5. [x] The back of the card should display the answer.
 6. [x] Users should be able to quiz themselves on a specific deck and receive a score once they're done.
-7. [ ] Users should receive a notification to remind themselves to study if they haven't already for that day.
+7. [x] Users should receive a notification to remind themselves to study if they haven't already for that day.
 # Views
 1. [x] Deck List View (Default View)
    - [x] displays the title of each Deck
@@ -43,3 +43,4 @@ Third Project of Udacity's React Nanodegree Program
 # Modifications
 - Added and `id` key to every deck
 - At the end of a quiz; If the percentage of the correct answers is less than 25%, it's displayed beside the number of correct answers and if it's 25% or more, it's displayed inside the progress bar
+- Users are able to enable/disable the daily reminder notification and choose the time at which they receive it

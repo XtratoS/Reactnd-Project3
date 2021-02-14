@@ -1,8 +1,10 @@
-import { RECEIVE_DECKS, ADD_CARD, SET_LOADING, CREATE_DECK, REMOVE_DECK } from '../actions';
+import { RECEIVE_DECKS, ADD_CARD, SET_LOADING, CREATE_DECK, REMOVE_DECK, SET_TIME, RECEIVE_INITIAL_DATA } from '../actions';
 import { combineReducers } from 'redux'
 
 function decks(state = {}, action) {
     switch(action.type) {
+        case RECEIVE_INITIAL_DATA:
+            return {...action.decks};
         case RECEIVE_DECKS:
             return {...action.decks};
         case CREATE_DECK:
@@ -36,7 +38,19 @@ function loadingIndicator(state = false, action) {
     }
 }
 
+function dailyReminderTime(state = null, action) {
+    switch(action.type) {
+        case RECEIVE_INITIAL_DATA:
+            return action.time;
+        case SET_TIME:
+            return action.time;
+        default:
+            return state;
+    }
+}
+
 export default combineReducers({
     decks,
-    loadingIndicator
+    loadingIndicator,
+    dailyReminderTime
 })

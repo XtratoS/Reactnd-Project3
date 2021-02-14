@@ -1,39 +1,31 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { wait } from './helpers';
-const ASYNCSTORAGE_KEY = 'Reactnd-Project3-25';
+import * as Notifications from 'expo-notifications';
+
+import { createNotification } from './helpers';
 import { defaultDecks } from './default';
 
+const DATA_KEY = 'Reactnd-Project3-DataKey25';
+const NOTIFICATION_KEY = 'Reactnd-Project3-NotificationKey37';
+
 export function getDecks() {
-    return new Promise(async function executor(resolve, reject) {
+    return new Promise(async function executor(resolve) {
         let data = {};
-        const asyncStorageValue = await AsyncStorage.getItem(ASYNCSTORAGE_KEY);
+        const asyncStorageValue = await AsyncStorage.getItem(DATA_KEY);
         if (asyncStorageValue !== null) {
             data = JSON.parse(asyncStorageValue);
         } else {
             data = defaultDecks;
-            await AsyncStorage.setItem(ASYNCSTORAGE_KEY, JSON.stringify(data));
+            await AsyncStorage.setItem(DATA_KEY, JSON.stringify(data));
         }
         resolve(data);
     });
 }
 
-// export function getDeck(id) {
-//     return new Promise(async function executor(resolve, reject) {
-//         await wait(1000);
-//         resolve(
-//             data[id] ? data[id] : {}
-//         );
-//     })
-// }
-
 export function addCard({ deckId, card }) {
-    return new Promise(async function executor(resolve, reject) {
-        let data = JSON.parse(await AsyncStorage.getItem(ASYNCSTORAGE_KEY));
-        // console.log(data);
+    return new Promise(async function executor(resolve) {
+        let data = JSON.parse(await AsyncStorage.getItem(DATA_KEY));
         data[deckId].questions.push(card);
-        // console.log(data);
-        await AsyncStorage.setItem(ASYNCSTORAGE_KEY, JSON.stringify(data));
-        // console.log(await AsyncStorage.getItem(ASYNCSTORAGE_KEY));
+        await AsyncStorage.setItem(DATA_KEY, JSON.stringify(data));
         resolve(card);
     });
 }
@@ -44,23 +36,68 @@ export function addCard({ deckId, card }) {
  * @returns {Promise} a promise which resolves to true if a new deck was created and false if the deck already exists
  */
 export function createDeck(title) {
-    return new Promise(async function executor(resolve, reject) {
-        let data = JSON.parse(await AsyncStorage.getItem(ASYNCSTORAGE_KEY));
+    return new Promise(async function executor(resolve) {
+        let data = JSON.parse(await AsyncStorage.getItem(DATA_KEY));
         if (!data[title]) {
             data[title] = {title, questions: []};
-            await AsyncStorage.setItem(ASYNCSTORAGE_KEY, JSON.stringify(data));
+            await AsyncStorage.setItem(DATA_KEY, JSON.stringify(data));
             resolve(true);
         }
         resolve(false);
-    })
+    });
 }
 
 export function removeDeck(title) {
-    return new Promise(async function executor(resolve, reject){
-        let data = JSON.parse(await AsyncStorage.getItem(ASYNCSTORAGE_KEY));
-        console.log(title)
+    return new Promise(async function executor(resolve){
+        let data = JSON.parse(await AsyncStorage.getItem(DATA_KEY));
         delete data[title];
-        await AsyncStorage.setItem(ASYNCSTORAGE_KEY, JSON.stringify(data));
+        await AsyncStorage.setItem(DATA_KEY, JSON.stringify(data));
         resolve(true);
+    });
+}
+
+export async function setLocalNotification(time) {
+    if (time === null) {
+        return AsyncStorage.removeItem(NOTIFICATION_KEY);
+    }
+
+    Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+            shouldShowAlert: true,
+            shouldPlaySound: true,
+            shouldSetBadge: false,
+        }),
+    });
+
+    let prevNotif = await AsyncStorage.getItem(NOTIFICATION_KEY);
+    if (prevNotif) {
+        await Notifications.cancelScheduledNotificationAsync(prevNotif);
+    }
+
+    const date = new Date(time);
+
+    const notificationId = await Notifications.scheduleNotificationAsync({
+        content: createNotification(),
+        trigger: {
+            hour: date.getHours(),
+            minute: date.getMinutes(),
+            repeats: true,
+        }
+    });
+
+    return AsyncStorage.setItem(NOTIFICATION_KEY, notificationId);
+}
+
+export async function getLocalNotification() {
+    return new Promise(async (resolve) => {
+        let notificationId = await AsyncStorage.getItem(NOTIFICATION_KEY);
+        if (!notificationId) {
+            resolve(null);
+        }
+        let notification = (await Notifications.getAllScheduledNotificationsAsync()).find((n) => (n.identifier === notificationId));
+        if (!notification) {
+            resolve(null);
+        }
+        resolve(notification);
     });
 }

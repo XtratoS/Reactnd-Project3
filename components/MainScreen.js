@@ -1,20 +1,39 @@
 import React, { useEffect } from 'react'
-import { View, Text, StyleSheet, VirtualizedList, ActivityIndicator, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, VirtualizedList, ActivityIndicator, TouchableOpacity, Platform } from 'react-native'
 import { connect } from 'react-redux'
-import { handleReceiveDecks } from '../actions'
-import { Entypo,  } from '@expo/vector-icons'
+import { handleInitialData, handleSetTime } from '../actions'
+import { Entypo, Ionicons, MaterialIcons, FontAwesome, } from '@expo/vector-icons'
 
-//entypo boook, circlewithplus
+// import { setLocalNotification } from '../utils/api'
+
 function MainScreen(props) {
     useEffect(() => {
-        props.handleReceiveDecks();
+        props.handleInitialData();
         props.navigation.setOptions({
+            headerLeft: () => (
+                <TouchableOpacity
+                    style={styles.iconsContainer}
+                    onPress={()=>{props.navigation.navigate("ConfigureNotification")}}
+                >
+                    {Platform.OS === 'ios' ? <>
+                    <Ionicons name='ios-notifications' color='black' size={26} />
+                    {/* <Text style={{fontSize: 22}}></Text> */}
+                    </>:<>
+                    <MaterialIcons name='notifications-on' color='black' size={26} />
+                    {/* <Text style={{fontSize: 22}}></Text> */}
+                    </>}
+                    {/* <FontAwesome name="gear" size={26} color="black" /> */}
+                </TouchableOpacity>
+            ),
             headerRight: () => (
-                <TouchableOpacity style={{flexDirection: 'row', marginHorizontal: 10}} onPress={()=>{props.navigation.navigate("CreateDeck")}}>
-                    <Entypo name='circle-with-plus' size={26} /><Text> </Text><Entypo name='book' size={26} />
+                <TouchableOpacity
+                    style={styles.iconsContainer}
+                    onPress={()=>{props.navigation.navigate("CreateDeck")}}
+                >
+                    <Entypo name='circle-with-plus' size={26} />
                 </TouchableOpacity>
             )
-        })
+        });
     }, [])
 
     function navigateToItem(item) {
@@ -81,7 +100,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        handleReceiveDecks: () => dispatch(handleReceiveDecks())
+        handleInitialData: () => dispatch(handleInitialData())
     }
 }
 
@@ -94,6 +113,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         // alignItems: 'center',
         justifyContent: 'center'
+    },
+    iconsContainer: {
+        flexDirection: 'row',
+        marginHorizontal: 4,
+        padding: 12,
+        alignItems: 'center',
+        // borderWidth: 1,
+        borderRadius: 8,
+        backgroundColor: '#eee',
     },
     deckContainer: {
         alignItems: 'center',
