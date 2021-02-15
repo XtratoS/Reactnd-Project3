@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { StackActions } from '@react-navigation/native';
+import { checkIn } from '../utils/api';
 
 const ProgressBar = (props) => (
     <View style={{flexDirection: 'row', marginTop: 30, backgroundColor: '#c2c2c2', borderRadius: 8, height: 40, width: '80%', justifyContent: 'flex-start'}}>
@@ -20,6 +21,9 @@ export default function Quiz(props) {
 
     function nextQuestion() {
         setCurrent(current + 1);
+        if (current === deck.questions.length - 1) {
+            checkIn();
+        }
     }
 
     function correctAnswerBtn() {

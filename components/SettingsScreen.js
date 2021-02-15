@@ -1,34 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,Switch } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { View, Text, StyleSheet, TouchableOpacity,Switch, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import { handleSetTime } from '../actions/dailyReminderTime';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { formatTime } from '../utils/helpers';
+import { setLocalNotification, getLocalNotification } from '../utils/api';
+import { setLoading } from '../actions/loadingIndicator';
+import Loading from './Loading';
 
-function formatTime(input) {
-    let date;
-    if (typeof(input) === 'number') {
-        date = new Date(input)
-    }
-    let hrs = date.getHours();
-    let mins = date.getMinutes();
-    let AP = hrs > 11 ? 'PM' : 'AM';
-    hrs = hrs > 9 ? hrs : `0${hrs}`;
-    mins = mins > 9 ? mins : `0${mins}`;
-    return `${hrs}: ${mins} ${AP}`;
-}
-
-function ConfigNotificationScreen(props) {
+function SettingsScreen(props) {
     const [showPicker, setShowPicker] = useState(false);
     const [switchState, setSwitch] = useState(true);
-    const [time, setStateTime] = useState(Date.now());
+    const [time, setTime] = useState(Date.now());
 
     useEffect(() => {
-        if (props.time) {
-            setStateTime(props.time);
-        } else {
-            setSwitch(false);
-        }
-    }, [props.time])
+        props.setLoading(true);
+        getLocalNotification().then((notification) => {
+            if (!notification) {
+                setSwitch(false);
+            }
+            else if (notification.trigger.value){
+                setSwitch(true);
+                setTime(notification.trigger.value);
+            }
+            props.setLoading(false);
+        });
+    }, [])
 
     function togglePicker() {
         setShowPicker(!showPicker);
@@ -37,17 +33,22 @@ function ConfigNotificationScreen(props) {
     function handleTimeChange(event, newTime) {
         togglePicker();
         if (newTime) {
-            setStateTime(event.nativeEvent.timestamp);
+            setTime(event.nativeEvent.timestamp);
         }
     }
 
     function submitChanges() {
+        props.setLoading(true);
         if (switchState === true) {
-            props.setTime(time);
+            setLocalNotification(time).then(() => {props.setLoading(false);});
         } else {
-            props.setTime(null);
+            setLocalNotification(null).then(() => {props.setLoading(false);});
         }
         props.navigation.goBack();
+    }
+
+    if (props.loading === true) {
+        return <Loading />
     }
 
     return (
@@ -79,6 +80,17 @@ function ConfigNotificationScreen(props) {
                     </Text>
                 </TouchableOpacity>
             </View>
+            {showPicker &&
+            <View style={{flex: 1, width: '100%'}}>
+                <DateTimePicker
+                    style={{width:'100%'}}
+                    is24Hour={false}
+                    display={Platform.OS === 'ios' && 'spinner'}
+                    mode='time'
+                    value={time}
+                    onChange={handleTimeChange}
+                />
+            </View>}
             <View style={[styles.settingGroup, styles.saveBtnContainer]}>
                 <TouchableOpacity
                     style={[styles.btn, { backgroundColor: 'darkgreen' }]}
@@ -87,31 +99,17 @@ function ConfigNotificationScreen(props) {
                     <Text style={{fontSize: 24, color: 'white'}}>Save Changes</Text>
                 </TouchableOpacity>
             </View>
-            {showPicker &&
-            <View>
-                <DateTimePicker
-                    mode='time'
-                    value={time}
-                    onChange={handleTimeChange}
-                />
-            </View>}
         </View>
     )
 }
 
 function mapStateToProps(state) {
     return {
-        time: state.dailyReminderTime
+        loading: state.loadingIndicator,
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        setTime: (time) => dispatch(handleSetTime(time))
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ConfigNotificationScreen)
+export default connect(mapStateToProps, { setLoading })(SettingsScreen)
 
 const styles = StyleSheet.create({
     container: {

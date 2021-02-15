@@ -6,6 +6,9 @@ import { defaultDecks } from './default';
 
 const DATA_KEY = 'Udacity:Reactnd-Project3-Data';
 const NOTIFICATION_KEY = 'Udacity:Reactnd-Project3-Notification';
+const CHECKIN_KEY = 'Udacity:Reactnd-Project3-Checkin';
+
+const MS_IN_DAY = 24*60*60*1000;
 
 export function getDecks() {
     return new Promise(async function executor(resolve) {
@@ -56,52 +59,128 @@ export function removeDeck(title) {
     });
 }
 
-export async function setLocalNotification(time) {
-    // REMOVE PREVIOUS NOTIFICATION FROM PHONE SCHEDULE
-    let prevNotif = await AsyncStorage.getItem(NOTIFICATION_KEY);
-    if (prevNotif) {
-        await Notifications.cancelScheduledNotificationAsync(prevNotif)
-    }
-
-    // REMOVE PREVIOUS NOTIFICATION FROM ASYNC STORAGE (IF NO NEW ONE)
-    if (time === null) {
-        return AsyncStorage.removeItem(NOTIFICATION_KEY);
-    }
-
-    Notifications.setNotificationHandler({
-        handleNotification: async () => ({
-            shouldShowAlert: true,
-            shouldPlaySound: true,
-            shouldSetBadge: false,
-        }),
-    });
-
-    const date = new Date(time);
-
-    // ADD NEW NOTIFICATION TO PHONE SCHEDULE
-    const notificationId = await Notifications.scheduleNotificationAsync({
-        content: createNotification(),
-        trigger: {
-            hour: date.getHours(),
-            minute: date.getMinutes(),
-            repeats: true,
-        }
-    });
-
-    // ADD NEW NOTIFICATION TO ASYNC STORAGE
-    return AsyncStorage.setItem(NOTIFICATION_KEY, notificationId);
+function setNotificationHandler() {
+    return new Promise(async (resolve) => {
+        await Notifications.setNotificationHandler({
+            handleNotification: async () => ({
+                shouldShowAlert: true,
+                shouldPlaySound: true,
+                shouldSetBadge: false,
+            }),
+        });
+        resolve();
+    })
 }
 
-export async function getLocalNotification() {
+function handleSetNotification(time) {
+    return new Promise(async (resolve) => {
+        await removeLocalNotification();
+
+        let lastCheckinStart = await AsyncStorage.getItem(CHECKIN_KEY);
+
+        // IF NOTIFICATION ALREADY SENT TODAY (OR) USER ALREADY SOLVED A QUIZ TODAY
+        if (time <= Date.now() || lastCheckinStart == getDayStart(Date.now())) {
+            time += MS_IN_DAY;
+        }
+
+        let date = new Date(time);
+
+        let notificationId = await Notifications.scheduleNotificationAsync({
+            content: createNotification(),
+            trigger: {
+                date
+            }
+        });
+        await AsyncStorage.setItem(NOTIFICATION_KEY, notificationId);
+
+        resolve(time);
+    });
+}
+
+function removeLocalNotification() {
+    return new Promise(async (resolve) => {
+        let notificationId = await AsyncStorage.getItem(NOTIFICATION_KEY);
+        if (!notificationId) {
+            resolve();
+            return;
+        }
+        await AsyncStorage.removeItem(NOTIFICATION_KEY);
+        await Notifications.cancelScheduledNotificationAsync(notificationId);
+        resolve();
+    });
+}
+
+export function setLocalNotification(time) {
+    return new Promise(async (resolve) => {
+        await removeLocalNotification();
+        if (time) {
+            await setNotificationHandler();
+            await handleSetNotification(time);
+        }
+        resolve();
+    });
+}
+
+export function getLocalNotification() {
     return new Promise(async (resolve) => {
         let notificationId = await AsyncStorage.getItem(NOTIFICATION_KEY);
         if (!notificationId) {
             resolve(null);
+            return;
         }
-        let notification = (await Notifications.getAllScheduledNotificationsAsync()).find((n) => (n.identifier === notificationId));
+
+        let notification = (await Notifications.getAllScheduledNotificationsAsync())
+            .find((n) => (n.identifier === notificationId));
         if (!notification) {
             resolve(null);
+            return;
         }
+
         resolve(notification);
+    });
+}
+
+function getDayStart(timestamp) {
+    return Math.floor(timestamp / MS_IN_DAY) * MS_IN_DAY;
+}
+
+async function scheduleNextNotification() {
+    return new Promise(async () => {
+        let notification = await getLocalNotification();
+        if (!notification) {
+            resolve();
+            return;
+        }
+
+        let notifStart = getDayStart(notification.trigger.value);
+        let todayStart = getDayStart(Date.now());
+
+        if (notifStart === todayStart) {
+            setLocalNotification(notification.trigger.value + MS_IN_DAY);
+        }
+    })
+}
+
+export function checkIn() {
+    return new Promise(async (resolve) => {
+        let lastCheckinStart = await AsyncStorage.getItem(CHECKIN_KEY);
+        let todayStart = getDayStart(Date.now());
+
+        if (lastCheckinStart == todayStart) {
+            resolve();
+            return;
+        }
+
+        await AsyncStorage.setItem(CHECKIN_KEY, todayStart);
+        await scheduleNextNotification();
+
+        resolve();
+    });
+}
+
+export function clearLocalNotifications() {
+    return new Promise(async (resolve) => {
+        await Notifications.cancelAllScheduledNotificationsAsync();
+        resolve();
     });
 }

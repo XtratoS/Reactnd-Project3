@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -16,18 +16,27 @@ import DeckScreen from './DeckScreen';
 import AddCardScreen from './AddCardScreen';
 import QuizScreen from './Quiz';
 import CreateDeckScreen from './CreateDeckScreen'
-import ConfigNotificationScreen from './ConfigNotificationScreen'
+import ConfigNotificationScreen from './SettingsScreen'
+import { clearLocalNotifications } from '../utils/api';
 
 const store = createStore(reducer, middleware);
 
 const Stack = createStackNavigator();
 
 export default function App(props) {
+    useEffect(() => {clearLocalNotifications}, [])
+
     return (
         <Provider store={store}>
             <NavigationContainer style={styles.container}>
                 <TopBar />
-                    <Stack.Navigator>
+                    <Stack.Navigator
+                        screenOptions={{
+                            headerStyle: {
+                                height: 48
+                            }
+                        }}
+                    >
                         <Stack.Screen
                             name="Home"
                             component={MainScreen}
@@ -54,7 +63,7 @@ export default function App(props) {
                             options={{title: "Create New Deck"}}
                         />
                         <Stack.Screen
-                            name="ConfigureNotification"
+                            name="Settings"
                             component={ConfigNotificationScreen}
                             options={{title: "Reminder Settings"}}
                         />

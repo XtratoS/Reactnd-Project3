@@ -11,6 +11,7 @@ import {
 import { connect } from 'react-redux';
 import { Entypo, Ionicons, MaterialIcons, } from '@expo/vector-icons';
 import { handleInitialData } from '../actions/shared';
+import Loading from './Loading';
 
 // import { setLocalNotification } from '../utils/api'
 
@@ -21,12 +22,12 @@ function MainScreen(props) {
             headerLeft: () => (
                 <TouchableOpacity
                     style={styles.iconsContainer}
-                    onPress={()=>{props.navigation.navigate("ConfigureNotification")}}
+                    onPress={()=>{props.navigation.navigate("Settings")}}
                 >
                     {Platform.OS === 'ios' ? <>
-                    <Ionicons name='ios-notifications' color='black' size={26} />
+                    <Ionicons name='ios-settings' color='black' size={36} />
                     </>:<>
-                    <MaterialIcons name='notifications-on' color='black' size={26} />
+                    <Ionicons name='settings' color='black' size={36} />
                     </>}
                 </TouchableOpacity>
             ),
@@ -35,7 +36,7 @@ function MainScreen(props) {
                     style={styles.iconsContainer}
                     onPress={()=>{props.navigation.navigate("CreateDeck")}}
                 >
-                    <Entypo name='circle-with-plus' size={26} />
+                    <Entypo name='circle-with-plus' size={36} />
                 </TouchableOpacity>
             )
         });
@@ -49,7 +50,7 @@ function MainScreen(props) {
     }
 
     if (props.loading === true) {
-        return <ActivityIndicator style={{paddingVertical: 25}} size="large" color="red"/>
+        return <Loading />
     }
 
     return (
@@ -120,11 +121,11 @@ const styles = StyleSheet.create({
     },
     iconsContainer: {
         flexDirection: 'row',
-        marginHorizontal: 4,
-        padding: 12,
+        marginHorizontal: 8,
+        height: 48,
+        width: 48,
         alignItems: 'center',
-        borderRadius: 8,
-        backgroundColor: '#eee',
+        justifyContent: 'center'
     },
     deckContainer: {
         alignItems: 'center',

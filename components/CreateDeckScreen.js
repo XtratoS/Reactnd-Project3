@@ -5,7 +5,8 @@ import {
     TouchableOpacity,
     StyleSheet,
     TextInput,
-    Platform
+    Platform,
+    KeyboardAvoidingView
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { connect } from 'react-redux';
