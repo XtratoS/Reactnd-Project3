@@ -44,19 +44,21 @@ function CreateDeckScreen(props) {
 
     return (
         <View style={styles.container}>
-            <View style={styles.inputGroup}>
-                <TextInput
-                    style={styles.textInput}
-                    onChangeText={setName}
-                    placeholder='Deck Name'
-                    value={name}
-                />
-                <ClearBtn onPress={() => setName('')} />
-            </View>
-            <View style={styles.inputGroup}>
-                <TouchableOpacity onPress={submitDeck} style={styles.submitBtn}>
-                    <Text style={{fontSize: 20}}>Create Deck</Text>
-                </TouchableOpacity>
+            <View style={{flex: 0.5, justifyContent: 'center', alignItems: 'center'}}>
+                <View style={styles.inputGroup}>
+                    <TextInput
+                        style={styles.textInput}
+                        onChangeText={setName}
+                        placeholder='Deck Name'
+                        value={name}
+                    />
+                    <ClearBtn onPress={() => setName('')} />
+                </View>
+                <View style={styles.inputGroup}>
+                    <TouchableOpacity onPress={submitDeck} style={styles.submitBtn}>
+                        <Text style={{fontSize: 20}}>Create Deck</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     )
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         margin: 15,
-        justifyContent: 'center',
+        // justifyContent: 'center',
         alignItems: 'center',
     },
     inputGroup: {

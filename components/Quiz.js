@@ -95,9 +95,9 @@ export default function Quiz(props) {
             <Text style={{marginTop: 30, fontSize: 36}}>
                 {deck.questions[current].question}
             </Text>
-            <View style={{height: 180}}>
+            <View style={{flex: 3}}>
                 {side === 'back' ?
-                    <Text style={{marginTop: 30, textAlign: 'center', fontSize: 30}}>
+                    <Text style={{margin: 30, textAlign: 'center', fontSize: 30}}>
                         {deck.questions[current].answer}
                     </Text>
                 :<>
@@ -115,16 +115,18 @@ export default function Quiz(props) {
                     </TouchableOpacity>
                 </>}
             </View>
-            <TouchableOpacity style={[styles.btn, styles.flipCardBtn]} onPress={flipCard}>
-                <Text style={[styles.btnText, {color: 'white'}]}>
-                    Flip Card
-                </Text>
-                <FontAwesome name="rotate-left" size={24} color="white" />
-            </TouchableOpacity>
-            <View style={{marginTop: 50}}>
-                <Text style={{fontSize: 18, fontStyle: 'italic'}}>
-                    {left()} questions left
-                </Text>
+            <View style={{flex: 1, alignItems: 'center'}}>
+                <TouchableOpacity style={[styles.btn, styles.flipCardBtn]} onPress={flipCard}>
+                    <Text style={[styles.btnText, {color: 'white'}]}>
+                        Flip Card
+                    </Text>
+                    <FontAwesome name="rotate-left" size={24} color="white" />
+                </TouchableOpacity>
+                <View style={{}}>
+                    <Text style={{fontSize: 18, fontStyle: 'italic'}}>
+                        {left()} questions left
+                    </Text>
+                </View>
             </View>
         </View>
     )
@@ -147,7 +149,6 @@ const styles = StyleSheet.create({
         fontSize: 24,
     },
     flipCardBtn: {
-        marginTop: 80,
         flexDirection: 'row',
         justifyContent: 'space-around',
         backgroundColor: '#222'

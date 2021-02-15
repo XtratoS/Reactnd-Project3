@@ -102,7 +102,7 @@ function DeckScreen(props) {
                     </View>
                 </View>
             </Modal>
-            <View style={{alignItems: 'center'}}>
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={{marginVertical:4, fontSize: 36}}>
                     {props.deck.title}
                 </Text>
@@ -110,30 +110,36 @@ function DeckScreen(props) {
                     {numCards} Cards
                 </Text>
             </View>
-            <View style={{alignItems: 'center'}}>
-                <TouchableOpacity
-                    style={styles.btn}
-                    onPress={() => {navigateToAddCard()}}
-                >
-                    <Text style={{fontSize: 24}}>Add Card</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.btn, { opacity: numCards === 0 ? 0.3 : 1 }]}
-                    onPress={() => {startQuiz()}}
-                    disabled={numCards === 0}
-                >
-                    <Text style={{fontSize: 24, color: 'black'}}>
-                        Start Quiz
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.btn, {borderColor: 'red', backgroundColor: 'red'}]}
-                    onPress={toggleModal}
-                >
-                    <Text style={{fontSize: 18, color: 'white'}}>
-                        Delete
-                    </Text>
-                </TouchableOpacity>
+            <View style={{flex: 2, justifyContent:'center', alignItems: 'center'}}>
+                <View style={{flex: 1, justifyContent:'flex-end'}}>
+                    <TouchableOpacity
+                        style={styles.btn}
+                        onPress={() => {navigateToAddCard()}}
+                    >
+                        <Text style={{fontSize: 24}}>Add Card</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{flex: 1, justifyContent:'center'}}>
+                    <TouchableOpacity
+                        style={[styles.btn, { opacity: numCards === 0 ? 0.3 : 1 }]}
+                        onPress={() => {startQuiz()}}
+                        disabled={numCards === 0}
+                    >
+                        <Text style={{fontSize: 24, color: 'black'}}>
+                            Start Quiz
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{flex: 1, justifyContent: 'center'}}>
+                    <TouchableOpacity
+                        style={[styles.btn, {borderColor: 'red', backgroundColor: 'red'}]}
+                        onPress={toggleModal}
+                    >
+                        <Text style={{fontSize: 18, color: 'white'}}>
+                            Delete
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     )
@@ -159,7 +165,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'space-around',
     },
     btn: {
         padding: 10,

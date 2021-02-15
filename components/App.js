@@ -15,16 +15,23 @@ import MainScreen from './MainScreen';
 import DeckScreen from './DeckScreen';
 import AddCardScreen from './AddCardScreen';
 import QuizScreen from './Quiz';
-import CreateDeckScreen from './CreateDeckScreen'
-import ConfigNotificationScreen from './SettingsScreen'
-import { clearLocalNotifications } from '../utils/api';
+import CreateDeckScreen from './CreateDeckScreen';
+import ConfigNotificationScreen from './SettingsScreen';
+import { requestNotificationsPermission } from '../utils/helpers';
+import { getLocalNotification } from '../utils/api';
 
 const store = createStore(reducer, middleware);
 
 const Stack = createStackNavigator();
 
 export default function App(props) {
-    useEffect(() => {clearLocalNotifications}, [])
+    useEffect(() => {
+        getLocalNotification().then((notification) => {
+            if (!notification) {
+                requestNotificationsPermission();
+            }
+        });
+    }, []);
 
     return (
         <Provider store={store}>

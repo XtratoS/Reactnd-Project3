@@ -171,7 +171,7 @@ export function checkIn() {
             return;
         }
 
-        await AsyncStorage.setItem(CHECKIN_KEY, todayStart);
+        await AsyncStorage.setItem(CHECKIN_KEY, todayStart.toString());
         await scheduleNextNotification();
 
         resolve();
