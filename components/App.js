@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -14,8 +14,7 @@ import TopBar from './TopBar';
 import MainScreen from './MainScreen';
 import DeckScreen from './DeckScreen';
 import QuizScreen from './Quiz';
-// import CreateDeckScreen from './CreateDeckScreen';
-import ConfigNotificationScreen from './SettingsScreen';
+import SettingsScreen from './SettingsScreen';
 import { requestNotificationsPermission } from '../utils/helpers';
 import { getLocalNotification } from '../utils/api';
 
@@ -60,7 +59,7 @@ export default function App(props) {
             />
             <Stack.Screen
               name="Settings"
-              component={ConfigNotificationScreen}
+              component={SettingsScreen}
               options={{title: "Reminder Settings"}}
             />
           </Stack.Navigator>
