@@ -1,188 +1,183 @@
 import React, { useEffect, useState } from 'react';
 import {
-    View,
-    Text,
-    StyleSheet,
-    ActivityIndicator,
-    TouchableOpacity,
-    Modal
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  Modal,
+  Keyboard
 } from 'react-native';
 import { connect } from 'react-redux';
 import { handleRemoveDeck } from '../actions/decks';
-
-function ModalBackdrop() {
-    return (
-        <View style={{
-            position: 'absolute',
-            backgroundColor: 'black',
-            opacity: 0.5,
-            height: '100%',
-            width: '100%'}}>
-        </View>
-    )
-}
+import headerRightHomeBtn from './HeaderHomeBtn';
+import { Container, Section, Btn } from './WrapperComponents';
+import ModalBackdrop from './Modals/ModalBackdrop';
+import AddCardModal from './Modals/AddCardModal';
 
 function ModalConfirmBtn(props) {
-    return (<TouchableOpacity
-        style={{ marginRight: 20, padding: 4 }}
-        onPress={props.onPress}
-    >
-        <Text style={{fontSize: 18, color: 'red'}}>
-            Delete Deck
-        </Text>
-    </TouchableOpacity>)
+  return (<TouchableOpacity
+    style={{ marginRight: 20, padding: 4 }}
+    onPress={props.onPress}
+  >
+    <Text style={{fontSize: 18, color: 'red'}}>
+      Delete Deck
+    </Text>
+  </TouchableOpacity>)
 }
 
 function ModalCancelBtn(props) {
-    return (<TouchableOpacity
-        style={{ marginLeft: 20, padding: 4 }}
-        onPress={props.onPress}
-    >
-        <Text style={{fontSize: 18}}>
-            Cancel
-        </Text>
-    </TouchableOpacity>)
+  return (<TouchableOpacity
+    style={{ marginLeft: 20, padding: 4 }}
+    onPress={props.onPress}
+  >
+    <Text style={{fontSize: 18}}>
+      Cancel
+    </Text>
+  </TouchableOpacity>)
 }
 
 function DeckScreen(props) {
-    const [modalVisibility, setModalVisibility] = useState(false)
+  const [deleteModalVisibility, setDeleteModalVisibility] = useState(false);
+  const [addCardModalVisibility, setAddCardModalVisibility] = useState(false);
 
-    useEffect(() => {
-        if (props.deck && props.deck.title) {
-            props.navigation.setOptions({title: props.deck.title})
-        }
-    }, [props.deck])
-
-    if (props.loading === true || !props.deck) {
-        return <ActivityIndicator style={{paddingVertical: 25}} size="large" color="red"/>
+  useEffect(() => {
+    if (props.deck && props.deck.title) {
+      props.navigation.setOptions({title: props.deck.title})
     }
+  }, [props.deck]);
 
-    function navigateToAddCard() {
-        props.navigation.navigate(
-            'AddCard',
-            { title: props.route.params.title }
-        )
-    }
+  useEffect (() => {
+    props.navigation.setOptions({
+      headerRight: () => {return headerRightHomeBtn(props);}
+    });
+  }, []);
 
-    function startQuiz() {
-        props.navigation.navigate(
-            'Quiz',
-            { deck: props.deck }
-        )
-    }
+  if (props.loading === true || !props.deck) {
+    return <ActivityIndicator style={{paddingVertical: 25}} size="large" color="red"/>
+  }
 
-    function toggleModal() {
-        setModalVisibility(!modalVisibility)
-    }
+  function showAddCardModal() {
+    setAddCardModalVisibility(true);
+    // props.navigation.navigate(
+    //   'AddCard',
+    //   { title: props.route.params.title }
+    // )
+  }
 
-    function deleteDeck() {
-        toggleModal();
-        props.removeDeck();
-        props.navigation.goBack();
-    }
-
-    const numCards = props.deck.questions.length;
-    return (
-        <View style={styles.container}>
-            <Modal
-                animationType='fade'
-                visible={modalVisibility}
-                transparent={true}
-            >
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                    <ModalBackdrop />
-                    <View style={styles.modalContentContainer}>
-                        <Text style={{textAlign: 'center', fontSize: 18}}>
-                            Are you sure you want to delete this deck?
-                        </Text>
-                        <View style={styles.modalBtnsContainer}>
-                            <ModalConfirmBtn onPress={deleteDeck}/>
-                            <ModalCancelBtn onPress={toggleModal}/>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <Text style={{marginVertical:4, fontSize: 36}}>
-                    {props.deck.title}
-                </Text>
-                <Text style={{marginVertical:4, fontSize: 16, color: '#444'}}>
-                    {numCards} Cards
-                </Text>
-            </View>
-            <View style={{flex: 2, justifyContent:'center', alignItems: 'center'}}>
-                <View style={{flex: 1, justifyContent:'flex-end'}}>
-                    <TouchableOpacity
-                        style={styles.btn}
-                        onPress={() => {navigateToAddCard()}}
-                    >
-                        <Text style={{fontSize: 24}}>Add Card</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{flex: 1, justifyContent:'center'}}>
-                    <TouchableOpacity
-                        style={[styles.btn, { opacity: numCards === 0 ? 0.3 : 1 }]}
-                        onPress={() => {startQuiz()}}
-                        disabled={numCards === 0}
-                    >
-                        <Text style={{fontSize: 24, color: 'black'}}>
-                            Start Quiz
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{flex: 1, justifyContent: 'center'}}>
-                    <TouchableOpacity
-                        style={[styles.btn, {borderColor: 'red', backgroundColor: 'red'}]}
-                        onPress={toggleModal}
-                    >
-                        <Text style={{fontSize: 18, color: 'white'}}>
-                            Delete
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </View>
+  function startQuiz() {
+    props.navigation.navigate(
+      'Quiz',
+      { deck: props.deck }
     )
+  }
+
+  function toggleModal() {
+    setDeleteModalVisibility(!deleteModalVisibility)
+  }
+
+  function deleteDeck() {
+    toggleModal();
+    props.removeDeck();
+    props.navigation.goBack();
+  }
+
+  const numCards = props.deck.questions.length;
+  return (
+    <Container center>
+      <Modal
+        animationType='fade'
+        visible={deleteModalVisibility}
+        transparent={true}
+      >
+        <View style={styles.centeredView}>
+          <ModalBackdrop />
+          <View style={styles.modalContentContainer}>
+            <Text style={{textAlign: 'center', fontSize: 18}}>
+              Are you sure you want to delete this deck?
+            </Text>
+            <View style={styles.modalBtnsContainer}>
+              <ModalConfirmBtn onPress={deleteDeck}/>
+              <ModalCancelBtn onPress={toggleModal}/>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <AddCardModal
+        deck={props.deck}
+        visible={addCardModalVisibility}
+        close={() => {setAddCardModalVisibility(false)}}
+      />
+
+      <Section center flex={1}>
+        <Text style={{marginVertical:4, fontSize: 36}}>
+          {props.deck.title}
+        </Text>
+        <Text style={{marginVertical:4, fontSize: 16, color: '#444'}}>
+          {numCards} Cards
+        </Text>
+      </Section>
+      <Section center flex={2}>
+        <Btn
+          onPress={showAddCardModal}
+        >
+          Add Card
+        </Btn>
+
+        <Btn
+          onPress={startQuiz}
+          disabled={numCards === 0}
+          style={{opacity: numCards === 0 ? 0.3 : 1}}
+        >
+          Start Quiz
+        </Btn>
+      </Section>
+      <Section center flex={1.5}>
+        <Btn
+          onPress={toggleModal}
+          color='red'
+          borderColor='red'
+          textColor='white'
+        >
+          Delete
+        </Btn>
+      </Section>
+    </Container>
+  )
 }
 
 function mapStateToProps(state, props) {
-    return {
-        deck: state.decks[props.route.params.title],
-        loading: state.loadingIndicator,
-    }
+  return {
+    deck: state.decks[props.route.params.title],
+    loading: state.loadingIndicator,
+  }
 }
 
 function mapDispatchToProps(dispatch, props) {
-    let deckTitle = props.route.params.title;
-    return {
-        removeDeck: () => {dispatch(handleRemoveDeck(deckTitle))}
-    }
+  let deckTitle = props.route.params.title;
+  return {
+    removeDeck: () => {dispatch(handleRemoveDeck(deckTitle))}
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeckScreen);
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-    },
-    btn: {
-        padding: 10,
-        borderWidth: 1,
-        borderRadius: 8,
-        width: 180,
-        alignItems: 'center',
-        marginVertical: 10
-    },
-    modalContentContainer: {
-        margin: 35,
-        borderRadius: 2,
-        padding: 20,
-        backgroundColor: 'white'
-    },
-    modalBtnsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        marginTop: 36
-    }
-})
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  modalContentContainer: {
+    margin: 35,
+    borderRadius: 2,
+    padding: 20,
+    backgroundColor: 'white'
+  },
+  modalBtnsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginTop: 36
+  }
+});

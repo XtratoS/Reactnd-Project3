@@ -1,19 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { StackActions } from '@react-navigation/native';
 import { checkIn } from '../utils/api';
-
-const ProgressBar = (props) => (
-    <View style={{flexDirection: 'row', marginTop: 30, backgroundColor: '#c2c2c2', borderRadius: 8, height: 40, width: '80%', justifyContent: 'flex-start'}}>
-        <View style={{backgroundColor: 'darkgreen', borderRadius: 8, height: 40, width: `${props.percentage}%`, justifyContent: 'center', alignItems: 'center'}}>
-            {props.percentage >= 25 && <Text style={{color: 'white', fontSize: 24}}>{props.percentage} %</Text>}
-        </View>
-        {props.percentage < 25 && <Text style={{marginLeft: 10, color: 'black', fontSize: 24}}>{props.percentage} %</Text>}
-    </View>
-)
+import { Btn, Container, Section } from './WrapperComponents';
+import ProgressBar from './ProgressBar';
+import headerRightHomeBtn from './HeaderHomeBtn';
 
 export default function Quiz(props) {
+    useEffect(() => {
+        props.navigation.setOptions({
+            headerRight: () => {return headerRightHomeBtn(props);}
+        })
+    }, []);
 
     const [correct, setCorrect] = useState(0);
     const [current, setCurrent] = useState(0);
@@ -58,7 +57,7 @@ export default function Quiz(props) {
     if (current === deck.questions.length) {
         const percentageRight = (correct / current * 10000).toFixed()/100;
         return (
-            <View style={styles.container}>
+            <Container center>
                 <Text style={styles.topText}>
                     You have completed this quiz!
                 </Text>
@@ -67,76 +66,74 @@ export default function Quiz(props) {
                 </Text>
                 <ProgressBar percentage={percentageRight} />
                 <View style={{marginTop: 20, marginBottom: 30}}>
-                    <TouchableOpacity
-                        style={styles.btn}
+                    <Btn
                         onPress={restart}
                     >
-                        <Text style={styles.btnText}>Restart Quiz</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.btn}
+                        Restart Quiz
+                    </Btn>
+
+                    <Btn
                         onPress={goBack}
                     >
-                        <Text style={styles.btnText}>Go Back</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.btn}
+                        Go Back
+                    </Btn>
+
+                    <Btn
                         onPress={goHome}
                     >
-                        <Text style={styles.btnText}>Go Home</Text>
-                    </TouchableOpacity>
+                        Go Home
+                    </Btn>
                 </View>
-            </View>
+            </Container>
         )
     }
 
     return (
-        <View style={styles.container}>
-            <Text style={{marginTop: 30, fontSize: 36}}>
-                {deck.questions[current].question}
-            </Text>
-            <View style={{flex: 3}}>
+        <Container center>
+            <Section center flex={1}>
+                <Text style={{fontSize: 36}}>
+                    {deck.questions[current].question}
+                </Text>
+            </Section>
+            <Section center flex={3}>
                 {side === 'back' ?
-                    <Text style={{margin: 30, textAlign: 'center', fontSize: 30}}>
+                    <Text style={{textAlign: 'center', fontSize: 30}}>
                         {deck.questions[current].answer}
                     </Text>
                 :<>
-                    <TouchableOpacity
-                        style={[styles.btn, {marginTop: 50, backgroundColor: 'darkgreen'}]}
+                    <Btn
+                        color='darkgreen'
+                        textColor='white'
                         onPress={correctAnswerBtn}
                     >
-                        <Text style={[styles.btnText, {color: 'white'}]}>Correct</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[styles.btn, {backgroundColor: 'darkred'}]}
+                        Correct
+                    </Btn>
+                    <Btn
+                        color='darkred'
+                        textColor='white'
                         onPress={nextQuestion}
                     >
-                        <Text style={[styles.btnText, {color: 'white'}]}>Incorrect</Text>
-                    </TouchableOpacity>
+                        Incorrect
+                    </Btn>
                 </>}
-            </View>
-            <View style={{flex: 1, alignItems: 'center'}}>
-                <TouchableOpacity style={[styles.btn, styles.flipCardBtn]} onPress={flipCard}>
-                    <Text style={[styles.btnText, {color: 'white'}]}>
-                        Flip Card
-                    </Text>
-                    <FontAwesome name="rotate-left" size={24} color="white" />
-                </TouchableOpacity>
-                <View style={{}}>
-                    <Text style={{fontSize: 18, fontStyle: 'italic'}}>
-                        {left()} questions left
-                    </Text>
-                </View>
-            </View>
-        </View>
+            </Section>
+            <Section center flex={2}>
+                <Btn
+                    color='#222'
+                    textColor='white'
+                    onPress={flipCard}
+                >
+                    Flip Card <FontAwesome name="rotate-left" size={24} color="white" />
+                </Btn>
+                <Text style={{fontSize: 18, fontStyle: 'italic'}}>
+                    {left()} questions left
+                </Text>
+            </Section>
+        </Container>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-    },
     btn: {
         padding: 10,
         borderWidth: 1,

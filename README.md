@@ -44,6 +44,7 @@ Third Project of Udacity's React Nanodegree Program
 - Added and `id` key to every deck
 - At the end of a quiz; If the percentage of the correct answers is less than 25%, it's displayed beside the number of correct answers and if it's 25% or more, it's displayed inside the progress bar
 - Users are able to enable/disable the daily reminder notification and choose the time at which they receive it
+- Creating a new Deck and Adding a new Card/Question were implemented as modals, not standalone views
 # Basic Application Testing
 This application was tested on 2 devices:
 - Sony Xperia Z5 running **Android 7.1.1**

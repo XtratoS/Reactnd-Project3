@@ -1,148 +1,128 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,Switch, Platform } from 'react-native';
-import { connect } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { Text, Platform, Switch, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { formatTime } from '../utils/helpers';
-import { setLocalNotification, getLocalNotification } from '../utils/api';
+import { connect } from 'react-redux';
 import { setLoading } from '../actions/loadingIndicator';
+import { getLocalNotification, setLocalNotification } from '../utils/api';
 import Loading from './Loading';
+import { Btn, Container, Section } from './WrapperComponents';
 
 function SettingsScreen(props) {
-    const [showPicker, setShowPicker] = useState(false);
-    const [switchState, setSwitch] = useState(true);
-    const [time, setTime] = useState(Date.now());
+  const [time, setTime] = useState(new Date(Date.now()));
+  const [switchState, setSwitchState] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
 
-    useEffect(() => {
-        props.setLoading(true);
-        getLocalNotification().then((notification) => {
-            if (!notification) {
-                setSwitch(false);
-            }
-            else if (notification.trigger.value){
-                setSwitch(true);
-                setTime(notification.trigger.value);
-            }
-            props.setLoading(false);
-        });
-    }, [])
+  useEffect(() => {
+    setLoading(true);
 
-    function togglePicker() {
-        setShowPicker(!showPicker);
-    }
+    getLocalNotification()
+      .then(async (notification) => {
 
-    function handleTimeChange(event, newTime) {
-        togglePicker();
-        if (newTime) {
-            setTime(event.nativeEvent.timestamp);
+        if (!notification) {
+          setSwitchState(false);
         }
-    }
 
-    function submitChanges() {
-        props.setLoading(true);
-        if (switchState === true) {
-            setLocalNotification(time).then(() => {props.setLoading(false);});
-        } else {
-            setLocalNotification(null).then(() => {props.setLoading(false);});
+        if (notification) {
+          let triggerTimestamp;
+          
+          if (Platform.OS === 'ios') {
+            triggerTimestamp = Math.floor((Date.now() + (notification.trigger.seconds % (24*60*60)) * 1000) / 60000) * 60000;
+          } else {
+            triggerTimestamp = Math.floor(notification.trigger.value / 60000) * 60000;
+          }
+
+          if (triggerTimestamp) {
+            setTime(new Date(triggerTimestamp));
+            setSwitchState(true);
+            if (Platform.OS === 'ios') {
+              setShowPicker(true);
+            }
+          }
         }
-        props.navigation.goBack();
-    }
 
-    if (props.loading === true) {
-        return <Loading />
-    }
+        setLoading(false);
+      })
+  }, []);
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.settingGroup}>
-                <Text style={styles.settingLabel}>Daily Reminder</Text>
-                <Switch
-                    value={switchState}
-                    onValueChange={(value) => {setSwitch(value)}}
-                />
-            </View>
-            <View style={styles.settingGroup}>
-                <Text style={[styles.settingLabel, {color: switchState ? 'black' : 'grey'}]}>
-                    Reminder Time
-                </Text>
-                <TouchableOpacity
-                    style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        paddingHorizontal: 6,
-                        borderWidth: 1,
-                        borderRadius: 8,
-                    }}
-                    disabled={!switchState}
-                    onPress={() => {togglePicker()}}
-                >
-                    <Text style={{fontSize: 20, color: switchState ? 'black' : 'grey'}}>
-                        {formatTime(time)}
-                    </Text>
-                </TouchableOpacity>
-            </View>
-            {showPicker &&
-            <View style={{flex: 1, width: '100%'}}>
-                <DateTimePicker
-                    style={{width:'100%'}}
-                    is24Hour={false}
-                    display={Platform.OS === 'ios' && 'spinner'}
-                    mode='time'
-                    value={time}
-                    onChange={handleTimeChange}
-                />
-            </View>}
-            <View style={[styles.settingGroup, styles.saveBtnContainer]}>
-                <TouchableOpacity
-                    style={[styles.btn, { backgroundColor: 'darkgreen' }]}
-                    onPress={() => {submitChanges()}}
-                >
-                    <Text style={{fontSize: 24, color: 'white'}}>Save Changes</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-    )
+  function onChange(event, newDate) {
+    setShowPicker(Platform.OS === 'ios');
+
+    if (event.type === 'dismissed') {
+      setSwitchState(!switchState);
+      return;
+    }
+    
+    if (newDate && typeof newDate === 'object') {
+      setTime(newDate);
+    }
+  }
+
+  function toggleSwitch() {
+    if (!switchState === true) {
+      setShowPicker(true);
+    }
+    setSwitchState(!switchState);
+  }
+  
+  function submitChanges() {
+    props.setLoading(true);
+    if (switchState === true) {
+      setLocalNotification(time).then(() => {props.setLoading(false);});
+    } else {
+      setLocalNotification(null).then(() => {props.setLoading(false);});
+    }
+    props.navigation.goBack();
+  }
+
+  if (props.loading === true) {
+    return <Loading />
+  }
+
+  return (
+      <Container center>
+        <Section center>
+          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+            <Text style={{fontSize: 24, marginRight: 24}}>Notifications</Text>
+            <Switch
+              value={switchState}
+              onValueChange={toggleSwitch}
+            />
+          </View>
+        </Section>
+        <Section center disabled={!switchState} disabledOpacity={0.3}>
+        {showPicker && (
+          <DateTimePicker
+            style={{width: '100%'}}
+            testID='dateTimePicker'
+            value={time}
+            mode='time'
+            is24Hour={false}
+            display={Platform.OS === 'ios' ? 'spinner' : 'clock'}
+            onChange={onChange}
+          />
+        )}
+        </Section>
+        <Section center={true}>
+          <Btn
+            color='darkgreen'
+            textColor='white'
+            onPress={submitChanges}
+          >
+            Save Changes
+          </Btn>
+        </Section>
+      </Container>
+  )
 }
 
 function mapStateToProps(state) {
-    return {
-        loading: state.loadingIndicator,
-    }
+  return {
+    loading: state.loadingIndicator,
+  }
 }
 
-export default connect(mapStateToProps, { setLoading })(SettingsScreen)
+function mapDispatchToProps() {
 
-const styles = StyleSheet.create({
-    container: {
-        padding: 20,
-        flex: 1,
-        width: '100%',
-        backgroundColor: '#fff',
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start'
-    },
-    settingGroup: {
-        flexDirection: 'row',
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        marginVertical: 16
-    },
-    settingLabel: {
-        marginHorizontal: 4,
-        width: 180,
-        fontSize: 20
-    },
-    btn: {
-        padding: 10,
-        borderWidth: 1,
-        borderRadius: 8,
-        width: 180,
-        alignItems: 'center',
-        marginVertical: 10
-    },
-    saveBtnContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'flex-end'
-    }
-})
+}
+
+export default connect(mapStateToProps, { setLoading })(SettingsScreen);
