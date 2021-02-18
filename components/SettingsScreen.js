@@ -23,13 +23,13 @@ function SettingsScreen(props) {
         }
 
         if (notification) {
-          let triggerTimestamp;
+          let triggerTimestamp = notification;
           
-          if (Platform.OS === 'ios') {
-            triggerTimestamp = Math.floor((Date.now() + (notification.trigger.seconds % (24*60*60)) * 1000) / 60000) * 60000;
-          } else {
-            triggerTimestamp = Math.floor(notification.trigger.value / 60000) * 60000;
-          }
+          // if (Platform.OS === 'ios') {
+          //   triggerTimestamp = Math.floor((Date.now() + (notification.trigger.seconds % (24*60*60)) * 1000) / 60000) * 60000;
+          // } else {
+          //   triggerTimestamp = Math.floor(notification.trigger.value / 60000) * 60000;
+          // }
 
           if (triggerTimestamp) {
             setTime(new Date(triggerTimestamp));

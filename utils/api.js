@@ -3,6 +3,7 @@ import * as Notifications from 'expo-notifications';
 
 import { createNotification } from './helpers';
 import { defaultDecks } from './default';
+import { Platform } from 'react-native';
 
 const DATA_KEY = 'Udacity:Reactnd-Project3-Data';
 const NOTIFICATION_KEY = 'Udacity:Reactnd-Project3-Notification';
@@ -138,7 +139,15 @@ export function getLocalNotification() {
       return;
     }
 
-    resolve(notification);
+    let triggerTimestamp;
+
+    if (Platform.OS === 'ios') {
+      triggerTimestamp = Math.floor((Date.now() + (notification.trigger.seconds % (24*60*60)) * 1000) / 60000) * 60000;
+    } else {
+      triggerTimestamp = Math.floor(notification.trigger.value / 60000) * 60000;
+    }
+
+    resolve(triggerTimestamp);
   });
 }
 
@@ -148,17 +157,17 @@ function getDayStart(timestamp) {
 
 async function scheduleNextNotification() {
   return new Promise(async () => {
-    let notification = await getLocalNotification();
+    let notificationTriggerTimestamp = await getLocalNotification();
     if (!notification) {
       resolve();
       return;
     }
 
-    let notifStart = getDayStart(notification.trigger.value);
+    let notifStart = getDayStart(notificationTriggerTimestamp);
     let todayStart = getDayStart(Date.now());
 
     if (notifStart === todayStart) {
-      setLocalNotification(notification.trigger.value + MS_IN_DAY);
+      setLocalNotification(notificationTriggerTimestamp + MS_IN_DAY);
     }
 
     resolve();
