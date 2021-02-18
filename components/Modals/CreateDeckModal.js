@@ -11,6 +11,15 @@ function CreateDeckModal(props) {
   const [name, setName] = useState('');
 
   const submitDeck = async () => {
+    // FORM VALIDATION
+    if (name.length === 0) {
+      alert("You must input a name for the deck");
+      return;
+    } else if (props.deckTitles.includes(name.toLowerCase())) {
+      alert("A deck with this name already exists, please use a different name for the new deck");
+      return;
+    }
+
     // DISPATCH ACTION
     props.createDeck(name);
 
@@ -72,11 +81,17 @@ function CreateDeckModal(props) {
   )
 }
 
+function mapStateToProps(state) {
+  return {
+    deckTitles: Object.keys(state.decks).map((title) => (title.toLowerCase()))
+  }
+}
+
 let mapDispatchToProps = {
   createDeck: handleCreateDeck
 }
 
-export default connect(null, mapDispatchToProps)(CreateDeckModal);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateDeckModal);
 
 const styles = StyleSheet.create({
   centeredView: {
