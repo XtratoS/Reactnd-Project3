@@ -56,3 +56,4 @@ This application was tested on 2 devices:
 1. After the first submission, fixed the following:
    - Added form validation to `Add Card` component
    - Added form validation to `Create Deck Modal` component
+   - Corrent and Incorrect buttons now appear on both sides of the card
