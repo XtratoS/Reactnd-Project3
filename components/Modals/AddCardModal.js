@@ -29,9 +29,16 @@ function AddCardScreen(props) {
   }
 
   const submitQuestion = async () => {
+    // FORM VALIDATION
+    if (question.length === 0 || answer.length === 0) {
+      alert("Please fill in both fields")
+    } else if (props.questions.includes(question.toLower())) {
+      alert("This question already exists, please try adding another one")
+    }
+
     // DISPATCH ACTION
     const deckId = props.deck.title;
-    props.dispatch(handleAddCard({ deckId, card: {...values} }));
+    props.handleAddCard({ deckId, card: {...values} });
 
     // CLEAR FIELDS
     let emptyValues = {};
@@ -107,7 +114,14 @@ function AddCardScreen(props) {
   )
 }
 
-export default connect()(AddCardScreen);
+function mapDispatchToProps(state, props) {
+  let deck = state.decks[props.deck.title]
+  return {
+    questions: deck.questions.map((questionObject) => (questionObject.question.toLower()))
+  }
+}
+
+export default connect(mapDispatchToProps, { handleAddCard })(AddCardScreen);
 
 const styles = StyleSheet.create({
   centeredView: {

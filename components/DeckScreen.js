@@ -59,10 +59,6 @@ function DeckScreen(props) {
 
   function showAddCardModal() {
     setAddCardModalVisibility(true);
-    // props.navigation.navigate(
-    //   'AddCard',
-    //   { title: props.route.params.title }
-    // )
   }
 
   function startQuiz() {
