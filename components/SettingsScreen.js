@@ -34,10 +34,11 @@ function SettingsScreen(props) {
           if (triggerTimestamp) {
             setTime(new Date(triggerTimestamp));
             setSwitchState(true);
-            if (Platform.OS === 'ios') {
-              setShowPicker(true);
-            }
           }
+        }
+
+        if (Platform.OS === 'ios') {
+          setShowPicker(true);
         }
 
         setLoading(false);
@@ -90,17 +91,20 @@ function SettingsScreen(props) {
           </View>
         </Section>
         <Section center disabled={!switchState} disabledOpacity={0.3}>
-        {showPicker && (
-          <DateTimePicker
-            style={{width: '100%'}}
-            testID='dateTimePicker'
-            value={time}
-            mode='time'
-            is24Hour={false}
-            display={Platform.OS === 'ios' ? 'spinner' : 'clock'}
-            onChange={onChange}
-          />
-        )}
+          {Platform.OS === 'android' && (
+            <Text style={{marginBottom: 'auto', fontSize: 20, justifySelf: 'flex-start'}}>Notification set at {`${time.getHours()%12}:${time.getMinutes()} ${time.getHours() > 12 ? 'PM' : 'AM'}`}</Text>
+          )}
+          {showPicker && (
+            <DateTimePicker
+              style={{width: '100%'}}
+              testID='dateTimePicker'
+              value={time}
+              mode='time'
+              is24Hour={false}
+              display={Platform.OS === 'ios' ? 'spinner' : 'clock'}
+              onChange={onChange}
+            />
+          )}
         </Section>
         <Section center={true}>
           <Btn
@@ -119,10 +123,6 @@ function mapStateToProps(state) {
   return {
     loading: state.loadingIndicator,
   }
-}
-
-function mapDispatchToProps() {
-
 }
 
 export default connect(mapStateToProps, { setLoading })(SettingsScreen);

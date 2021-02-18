@@ -54,6 +54,9 @@ This application was tested on 2 devices:
 
 # Patches
 1. After the first submission, fixed the following:
-   - Added form validation to `Add Card` component
-   - Added form validation to `Create Deck Modal` component
-   - Corrent and Incorrect buttons now appear on both sides of the card
+   - [x] Users can create a card with no question or answer. Add some form validation to avoid that, like disabling the submit button.
+   - [x] The "correct" and "incorrect" buttons should appear at all times, not only with the question.
+   - [x] Same as the question: users can create a deck with no name.
+   - ~~[x] The API for notifications is ready, but you are not calling the methods when the user finishes a quiz.~~ Also, on iPhone the toggle generates an error.
+     - I'm calling the function `checkIn()` once the user finishes the quiz, this function stores the date at which the user last answered a quiz, the application compared this date against the next notification
+     - As for the error that appear on IOS, I couldn't recreate the issue, it's working just fine on the tested device mentioned in [this section](#basic-application-testing)
