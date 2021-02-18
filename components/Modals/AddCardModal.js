@@ -33,7 +33,7 @@ function AddCardScreen(props) {
     if (question.length === 0 || answer.length === 0) {
       alert("Please fill in both fields");
       return;
-    } else if (props.questions.includes(question.toLower())) {
+    } else if (props.questions.includes(question.toLowerCase())) {
       alert("This question already exists, please try adding another one");
       return;
     }
@@ -119,7 +119,7 @@ function AddCardScreen(props) {
 function mapDispatchToProps(state, props) {
   let deck = state.decks[props.deck.title]
   return {
-    questions: deck.questions.map((questionObject) => (questionObject.question.toLower()))
+    questions: deck.questions.map((questionObject) => (questionObject.question.toLowerCase()))
   }
 }
 
