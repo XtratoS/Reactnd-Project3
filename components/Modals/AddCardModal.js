@@ -31,9 +31,11 @@ function AddCardScreen(props) {
   const submitQuestion = async () => {
     // FORM VALIDATION
     if (question.length === 0 || answer.length === 0) {
-      alert("Please fill in both fields")
+      alert("Please fill in both fields");
+      return;
     } else if (props.questions.includes(question.toLower())) {
-      alert("This question already exists, please try adding another one")
+      alert("This question already exists, please try adding another one");
+      return;
     }
 
     // DISPATCH ACTION
