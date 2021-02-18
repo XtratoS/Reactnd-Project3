@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { View, Modal, StyleSheet, Platform, TouchableOpacity, Keyboard } from 'react-native';
+import React, { useState } from 'react'
+import { View, Modal, StyleSheet, Platform, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux'
 import { handleAddCard } from '../../actions/decks'
 import { Btn, Section } from '../WrapperComponents';
@@ -9,16 +9,6 @@ import { Ionicons } from '@expo/vector-icons';
 
 function AddCardScreen(props) {
   const [values, setValues] = useState({question: '', answer: ''});
-  const [keyboardActive, setKeyboardActive] = useState(false);
-  
-  useEffect(() => {
-    let kds = Keyboard.addListener("keyboardDidShow", () => {setKeyboardActive(true);});
-    let kdh = Keyboard.addListener("keyboardDidHide", () => {setKeyboardActive(false);});
-    return () => {
-      Keyboard.removeListener("keyboardDidShow", kds);
-      Keyboard.removeListener("keyboardDidHide", kdh);
-    }
-  }, [])
 
   const handleChange = (data) => {
     const { name, value } = data;
@@ -58,19 +48,18 @@ function AddCardScreen(props) {
   return (
     <Modal
       animationType='fade'
-      visible={props.visible}
+      visible={true}
       transparent={true}
       onRequestClose={() => {props.close()}}
     >
       <View style={styles.centeredView}>
         <ModalBackdrop />
-        <View
+        <KeyboardAvoidingView
           style={[
             styles.modalContentContainer,
             {
               justifyContent: 'center',
-              alignItems: 'center',
-              height: keyboardActive !== true ? 400 : '100%',
+              alignItems: 'center'
             }
           ]}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -110,7 +99,7 @@ function AddCardScreen(props) {
               Submit
             </Btn>
           </Section>
-        </View>
+        </KeyboardAvoidingView>
       </View>
     </Modal>
   )
@@ -132,6 +121,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   modalContentContainer: {
+    maxHeight: 480,
     borderRadius: 2,
     padding: 20,
     backgroundColor: 'white'

@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   VirtualizedList,
-  ActivityIndicator,
   TouchableOpacity,
   Platform
 } from 'react-native';
@@ -58,12 +57,14 @@ function MainScreen(props) {
   }
   
   return (
-    <Container center>
-      <CreateDeckModal
-        visible={createModalVisibility}
-        close={() => {setCreateModalVisibility(false)}}
-        navigateToDeck={navigateToItem}
-      />
+    <Container center style={{padding: 0}}>
+      {createModalVisibility && (
+        <CreateDeckModal
+          visible={true}
+          close={() => {setCreateModalVisibility(false)}}
+          navigateToDeck={navigateToItem}
+        />
+      )}
       <VirtualizedList
         style={{ paddingVertical: 15, width: '100%' }}
         contentContainerStyle={{ paddingBottom: 30 }}

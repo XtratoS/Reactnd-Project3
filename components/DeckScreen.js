@@ -5,8 +5,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
-  Modal,
-  Keyboard
+  Modal
 } from 'react-native';
 import { connect } from 'react-redux';
 import { handleRemoveDeck } from '../actions/decks';
@@ -81,30 +80,33 @@ function DeckScreen(props) {
   const numCards = props.deck.questions.length;
   return (
     <Container center>
-      <Modal
-        animationType='fade'
-        visible={deleteModalVisibility}
-        transparent={true}
-      >
-        <View style={styles.centeredView}>
-          <ModalBackdrop />
-          <View style={styles.modalContentContainer}>
-            <Text style={{textAlign: 'center', fontSize: 18}}>
-              Are you sure you want to delete this deck?
-            </Text>
-            <View style={styles.modalBtnsContainer}>
-              <ModalConfirmBtn onPress={deleteDeck}/>
-              <ModalCancelBtn onPress={toggleModal}/>
+      {deleteModalVisibility && (
+        <Modal
+          animationType='fade'
+          visible={true}
+          transparent={true}
+        >
+          <View style={styles.centeredView}>
+            <ModalBackdrop />
+            <View style={styles.modalContentContainer}>
+              <Text style={{textAlign: 'center', fontSize: 18}}>
+                Are you sure you want to delete this deck?
+              </Text>
+              <View style={styles.modalBtnsContainer}>
+                <ModalConfirmBtn onPress={deleteDeck}/>
+                <ModalCancelBtn onPress={toggleModal}/>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      )}
 
-      <AddCardModal
-        deck={props.deck}
-        visible={addCardModalVisibility}
-        close={() => {setAddCardModalVisibility(false)}}
-      />
+      {addCardModalVisibility && (
+        <AddCardModal
+          deck={props.deck}
+          close={() => {setAddCardModalVisibility(false)}}
+        />
+      )}
 
       <Section center flex={1}>
         <Text style={{marginVertical:4, fontSize: 36}}>

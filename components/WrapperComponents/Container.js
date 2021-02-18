@@ -15,5 +15,5 @@ export default function Container(props) {
     });
   }
 
-  return <View style={style}>{props.children}</View>
+  return <View style={[style, props.style]}>{props.children}</View>
 }

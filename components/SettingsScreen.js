@@ -92,7 +92,7 @@ function SettingsScreen(props) {
         </Section>
         <Section center disabled={!switchState} disabledOpacity={0.3}>
           {Platform.OS === 'android' && (
-            <Text style={{marginBottom: 'auto', fontSize: 20, justifySelf: 'flex-start'}}>Notification set at {`${time.getHours()%12}:${time.getMinutes()} ${time.getHours() > 12 ? 'PM' : 'AM'}`}</Text>
+            <Text style={{marginBottom: 'auto', fontSize: 20}}>Notification set at {`${time.getHours()%12}:${time.getMinutes()} ${time.getHours() > 12 ? 'PM' : 'AM'}`}</Text>
           )}
           {showPicker && (
             <DateTimePicker

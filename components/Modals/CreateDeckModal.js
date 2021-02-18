@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, KeyboardAvoidingView, Platform, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { handleCreateDeck } from '../../actions/decks';
-import { Container, Section, Btn } from '../WrapperComponents';
+import { Section, Btn } from '../WrapperComponents';
 import MoreTextInput from '../MoreTextInput';
 import ModalBackdrop from './ModalBackdrop';
 import { Ionicons } from '@expo/vector-icons';
@@ -23,18 +23,20 @@ function CreateDeckModal(props) {
     // DISPATCH ACTION
     props.createDeck(name);
 
-    // CLEAR FIELDS
-    setName('');
-
     // NAVIGATE
     props.close();
     props.navigateToDeck(name);
   }
 
+  function closeBtnPress() {
+    setName('');
+    props.close();
+  }
+
   return (
     <Modal
       animationType='fade'
-      visible={props.visible}
+      visible={true}
       transparent={true}
       onRequestClose={() => {props.close()}}
     >
@@ -49,7 +51,7 @@ function CreateDeckModal(props) {
         >
           <View center style={{alignSelf: 'flex-end'}}>
             <TouchableOpacity
-              onPress={() => {props.close()}}
+              onPress={closeBtnPress}
             >
               <Ionicons
                 name={Platform.OS === 'ios' ? 'ios-close-circle' : 'close-circle'}
@@ -70,6 +72,8 @@ function CreateDeckModal(props) {
           </Section>
           <Section center flex={0.5}>
             <Btn
+              color='darkgreen'
+              textColor='white'
               onPress={submitDeck}
             >
               Create Deck
@@ -103,6 +107,7 @@ const styles = StyleSheet.create({
     margin: 35,
     borderRadius: 2,
     padding: 20,
+    maxHeight: 400,
     backgroundColor: 'white'
   },
 });
