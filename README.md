@@ -46,7 +46,12 @@ Third Project of Udacity's React Nanodegree Program
 - [x] Users are able to enable/disable the daily reminder notification and choose the time at which they receive it
 - [x] An option to delete a deck
 - Creating a new Deck and Adding a new Card/Question were implemented as modals, not standalone views - I have implemented them as separate views at first, then decided to refactor them into modals
+
 # Basic Application Testing
 This application was tested on 2 devices:
 - Sony Xperia Z5 running **Android 7.1.1**
 - iPhone 11 Pro running **14.4**
+
+# Patches
+1. After the first submission, fixed the following:
+   - Added form validation to `Add Card` component
