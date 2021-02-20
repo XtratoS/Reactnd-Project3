@@ -37,10 +37,10 @@ function AddCardScreen(props) {
     // FORM VALIDATION
     const { question, answer } = values;
     if (question.length === 0 || answer.length === 0) {
-      Alert.alert("Error", "Please fill in both fields");
+      Alert.alert("Missing Input", "Please fill in both fields");
       return;
     } else if (props.questions.includes(question.toLowerCase())) {
-      Alert.alert("Error", "This question already exists, please try adding another one");
+      Alert.alert("Duplicate Question", "This question already exists, please try adding another one");
       return;
     }
 

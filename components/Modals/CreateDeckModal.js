@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, KeyboardAvoidingView, Platform, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Modal, KeyboardAvoidingView, Platform, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { handleCreateDeck } from '../../actions/decks';
 import { Section, Btn } from '../WrapperComponents';
@@ -13,10 +13,10 @@ function CreateDeckModal(props) {
   const submitDeck = async () => {
     // FORM VALIDATION
     if (name.length === 0) {
-      alert("You must input a name for the deck");
+      Alert.alert("Missing Name", "You must input a name for the deck");
       return;
     } else if (props.deckTitles.includes(name.toLowerCase())) {
-      alert("A deck with this name already exists, please use a different name for the new deck");
+      Alert.alert("Duplicate Deck", "A deck with this name already exists, please use a different name for the new deck");
       return;
     }
 
