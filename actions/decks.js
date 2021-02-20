@@ -10,9 +10,7 @@ export const ADD_CARD = 'ADD_CARD';
 export const CREATE_DECK = 'CREATE_DECK';
 export const REMOVE_DECK = 'REMOVE_DECK';
 
-
-
-function addCard({ deckId, card }) {
+function addCard(deckId, card) {
   return {
     type: ADD_CARD,
     deckId,
@@ -20,11 +18,11 @@ function addCard({ deckId, card }) {
   }
 }
 
-export function handleAddCard(cardData) {
+export function handleAddCard(deckId, card) {
   return function(dispatch) {
     dispatch(setLoading(true));
-    _addCard(cardData).then(() => {
-      dispatch(addCard(cardData));
+    _addCard(deckId, card).then(() => {
+      dispatch(addCard(deckId, card));
       dispatch(setLoading(false));
     });
   }

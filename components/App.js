@@ -17,6 +17,7 @@ import QuizScreen from './Quiz';
 import SettingsScreen from './SettingsScreen';
 import { requestNotificationsPermission } from '../utils/helpers';
 import { getLocalNotification } from '../utils/api';
+import AddCardScreen from './AddCardScreen';
 
 const store = createStore(reducer, middleware);
 
@@ -51,6 +52,11 @@ export default function App(props) {
               name="Deck"
               component={DeckScreen}
               options={{title: ""}}
+            />
+            <Stack.Screen
+              name="AddCard"
+              component={AddCardScreen}
+              options={{title: "Add Card"}}
             />
             <Stack.Screen
               name="Quiz"

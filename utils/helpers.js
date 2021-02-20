@@ -21,15 +21,17 @@ export function createNotification() {
 }
 
 export function formatTime(input) {
-  let date;
-  if (typeof(input) === 'number') {
-    date = new Date(input)
-  }
+  let date = new Date(input);
   let hrs = date.getHours();
   let mins = date.getMinutes();
+
   let AP = hrs > 11 ? 'PM' : 'AM';
+
+  hrs = hrs % 12;
+
   hrs = hrs > 9 ? hrs : `0${hrs}`;
   mins = mins > 9 ? mins : `0${mins}`;
+
   return `${hrs}: ${mins} ${AP}`;
 }
 

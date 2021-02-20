@@ -84,17 +84,30 @@ export default function Quiz(props) {
 
   return (
     <Container center>
-      <Section center flex={2}>
-        {side === 'front' ?
-          <Text style={{fontSize: 36}}>
-            {deck.questions[current].question}
-          </Text> :
-          <Text style={{fontSize: 30}}>
-            {deck.questions[current].answer}
-          </Text>
-        }
+      <Section center>
+        <Text style={{
+          textAlign: 'center',
+          fontSize: 24,
+          color: '#444'
+        }}>
+          {side === 'front' ?
+            'Question' :
+            'Answer'
+          }
+        </Text>
       </Section>
-      <Section center flex={3}>
+      <Section center flex={4}>
+        <Text style={{
+          textAlign: 'center',
+          fontSize: 32
+        }}>
+          {side === 'front' ?
+            deck.questions[current].question :
+            deck.questions[current].answer
+          }
+        </Text>
+      </Section>
+      <Section center flex={6}>
         <Btn
           color='darkgreen'
           textColor='white'
@@ -110,7 +123,7 @@ export default function Quiz(props) {
           Incorrect
         </Btn>
       </Section>
-      <Section center flex={2}>
+      <Section center flex={4}>
         <Btn
           color='#222'
           textColor='white'

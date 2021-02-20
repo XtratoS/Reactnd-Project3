@@ -4,6 +4,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { connect } from 'react-redux';
 import { setLoading } from '../actions/loadingIndicator';
 import { getLocalNotification, setLocalNotification } from '../utils/api';
+import { formatTime } from '../utils/helpers';
 import Loading from './Loading';
 import { Btn, Container, Section } from './WrapperComponents';
 
@@ -24,12 +25,6 @@ function SettingsScreen(props) {
 
         if (notification) {
           let triggerTimestamp = notification;
-          
-          // if (Platform.OS === 'ios') {
-          //   triggerTimestamp = Math.floor((Date.now() + (notification.trigger.seconds % (24*60*60)) * 1000) / 60000) * 60000;
-          // } else {
-          //   triggerTimestamp = Math.floor(notification.trigger.value / 60000) * 60000;
-          // }
 
           if (triggerTimestamp) {
             setTime(new Date(triggerTimestamp));
@@ -37,9 +32,7 @@ function SettingsScreen(props) {
           }
         }
 
-        if (Platform.OS === 'ios') {
-          setShowPicker(true);
-        }
+        setShowPicker(Platform.OS === 'ios');
 
         setLoading(false);
       })
@@ -68,7 +61,8 @@ function SettingsScreen(props) {
   function submitChanges() {
     props.setLoading(true);
     if (switchState === true) {
-      setLocalNotification(time).then(() => {props.setLoading(false);});
+      let date = +time;
+      setLocalNotification(date).then(() => {props.setLoading(false);});
     } else {
       setLocalNotification(null).then(() => {props.setLoading(false);});
     }
@@ -92,7 +86,7 @@ function SettingsScreen(props) {
         </Section>
         <Section center disabled={!switchState} disabledOpacity={0.3}>
           {Platform.OS === 'android' && (
-            <Text style={{marginBottom: 'auto', fontSize: 20}}>Notification set at {`${time.getHours()%12}:${time.getMinutes()} ${time.getHours() > 12 ? 'PM' : 'AM'}`}</Text>
+            <Text style={{marginBottom: 'auto', fontSize: 20}}>Notification set at {time && formatTime(time)}</Text>
           )}
           {showPicker && (
             <DateTimePicker
@@ -112,7 +106,7 @@ function SettingsScreen(props) {
             textColor='white'
             onPress={submitChanges}
           >
-            Save Changes
+            Save
           </Btn>
         </Section>
       </Container>

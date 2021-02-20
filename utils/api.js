@@ -25,7 +25,7 @@ export function getDecks() {
   });
 }
 
-export function addCard({ deckId, card }) {
+export function addCard(deckId, card) {
   return new Promise(async function executor(resolve) {
     let data = JSON.parse(await AsyncStorage.getItem(DATA_KEY));
     data[deckId].questions.push(card);
@@ -156,9 +156,9 @@ function getDayStart(timestamp) {
 }
 
 async function scheduleNextNotification() {
-  return new Promise(async () => {
+  return new Promise(async (resolve) => {
     let notificationTriggerTimestamp = await getLocalNotification();
-    if (!notification) {
+    if (!notificationTriggerTimestamp) {
       resolve();
       return;
     }
@@ -171,7 +171,7 @@ async function scheduleNextNotification() {
     }
 
     resolve();
-  })
+  });
 }
 
 export function checkIn() {

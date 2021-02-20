@@ -12,7 +12,6 @@ import { handleRemoveDeck } from '../actions/decks';
 import headerRightHomeBtn from './HeaderHomeBtn';
 import { Container, Section, Btn } from './WrapperComponents';
 import ModalBackdrop from './Modals/ModalBackdrop';
-import AddCardModal from './Modals/AddCardModal';
 
 function ModalConfirmBtn(props) {
   return (<TouchableOpacity
@@ -56,8 +55,11 @@ function DeckScreen(props) {
     return <ActivityIndicator style={{paddingVertical: 25}} size="large" color="red"/>
   }
 
-  function showAddCardModal() {
-    setAddCardModalVisibility(true);
+  function navigateToAddCard() {
+    props.navigation.navigate(
+      'AddCard',
+      { deck: props.deck }
+    )
   }
 
   function startQuiz() {
@@ -101,13 +103,6 @@ function DeckScreen(props) {
         </Modal>
       )}
 
-      {addCardModalVisibility && (
-        <AddCardModal
-          deck={props.deck}
-          close={() => {setAddCardModalVisibility(false)}}
-        />
-      )}
-
       <Section center flex={1}>
         <Text style={{marginVertical:4, fontSize: 36}}>
           {props.deck.title}
@@ -118,7 +113,7 @@ function DeckScreen(props) {
       </Section>
       <Section center flex={2}>
         <Btn
-          onPress={showAddCardModal}
+          onPress={navigateToAddCard}
         >
           Add Card
         </Btn>

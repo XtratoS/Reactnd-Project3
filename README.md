@@ -60,3 +60,6 @@ This application was tested on 2 devices:
    - ~~[x] The API for notifications is ready, but you are not calling the methods when the user finishes a quiz.~~ Also, on iPhone the toggle generates an error.
      - I'm calling the function `checkIn()` once the user finishes the quiz, this function stores the date at which the user last answered a quiz, the application compared this date against the next notification
      - As for the error that appear on IOS, I couldn't recreate the issue, it's working just fine on the tested device mentioned in [this section](#basic-application-testing)
+2. After the second submission:
+   - Handled the mentioned errors
+   - Refactored the Add Card into a separate screen instead of a modal
